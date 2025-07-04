@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>@ViewBag.Message</p>
+
+<div class="alert alert-info" role="alert">
+    This is a placeholder page for Patient Management. Full functionality will be implemented later.
+    <br />
+    Planned features: Patient Registration, Appointments, EHR/EMR, Lab, Pharmacy (dispensing).
+</div>
+
+@* Example of how you might list items later:
+@model IEnumerable<UniCareERP.Domain.Entities.Patients.Patient>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Patient Code</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PatientCode</td>
+                    <td>@item.FirstName @item.LastName</td>
+                    <td>@item.DateOfBirth.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="4">No patients found.</td></tr>
+        }
+    </tbody>
+</table>
+<p><a asp-action="Create" class="btn btn-primary">Register New Patient</a></p>
+*@
