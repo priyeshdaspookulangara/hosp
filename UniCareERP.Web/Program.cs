@@ -28,6 +28,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 // Register application services
 builder.Services.AddScoped<UniCareERP.Application.Services.IUserService, UniCareERP.Application.Services.UserService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.IRoleService, UniCareERP.Application.Services.RoleService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPatientService, UniCareERP.Application.Services.Patients.PatientService>(); // Added PatientService
 
 builder.Services.AddControllersWithViews();
 

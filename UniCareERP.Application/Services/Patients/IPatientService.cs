@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UniCareERP.Domain.Entities.Patients; // Assuming DTOs will be created later or entities used directly for now
+using UniCareERP.Application.DTOs.Patients;
 
 namespace UniCareERP.Application.Services.Patients
 {
     public interface IPatientService
     {
-        Task<IEnumerable<Patient>> GetAllPatientsAsync(); // Replace Patient with PatientDto later
-        Task<Patient?> GetPatientByIdAsync(Guid id);      // Replace Patient with PatientDto later
-        // Add other method signatures like Create, Update, Delete
+        Task<PatientDto?> CreatePatientAsync(CreatePatientDto createPatientDto);
+        Task<PatientDto?> GetPatientByIdAsync(Guid id);
+        Task<IEnumerable<PatientDto>> GetAllPatientsAsync();
+        Task<bool> UpdatePatientAsync(UpdatePatientDto updatePatientDto);
+        Task<bool> DeletePatientAsync(Guid id); // True if successful, false otherwise
+        Task<string> GenerateNextPatientCodeAsync();
     }
 }
