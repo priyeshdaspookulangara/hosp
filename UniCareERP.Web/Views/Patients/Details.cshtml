@@ -69,5 +69,69 @@
 </div>
 <div class="mt-3">
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Patient</a>
+    <a asp-controller="Appointments" asp-action="Create" asp-route-patientId="@Model.Id" class="btn btn-success ms-2">Schedule New Appointment</a>
     <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
 </div>
+
+<hr class="mt-4 mb-3"/>
+<h3>Patient Appointments</h3>
+
+@{
+    var appointments = ViewBag.PatientAppointments as IEnumerable<UniCareERP.Application.DTOs.Appointments.AppointmentDto>;
+}
+
+@if (appointments != null && appointments.Any())
+{
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Doctor</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appt in appointments.OrderByDescending(a => a.AppointmentDateTime))
+            {
+                <tr>
+                    <td>@appt.AppointmentDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@appt.DoctorName</td>
+                    <td>@appt.ServiceType</td>
+                    <td>
+                        <span class="badge bg-@(GetStatusBadgeClass(appt.Status))">
+                           @appt.Status.ToString()
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-controller="Appointments" asp-action="Details" asp-route-id="@appt.Id" class="btn btn-xs btn-outline-info">View</a>
+                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@appt.Id" class="btn btn-xs btn-outline-primary ms-1">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No appointments found for this patient.</p>
+}
+
+
+@functions {
+    string GetStatusBadgeClass(UniCareERP.Domain.Enums.AppointmentStatus status)
+    {
+        return status switch
+        {
+            UniCareERP.Domain.Enums.AppointmentStatus.Scheduled => "secondary",
+            UniCareERP.Domain.Enums.AppointmentStatus.Confirmed => "primary",
+            UniCareERP.Domain.Enums.AppointmentStatus.Completed => "success",
+            UniCareERP.Domain.Enums.AppointmentStatus.CancelledByPatient => "warning",
+            UniCareERP.Domain.Enums.AppointmentStatus.CancelledByClinic => "warning",
+            UniCareERP.Domain.Enums.AppointmentStatus.NoShow => "danger",
+            UniCareERP.Domain.Enums.AppointmentStatus.Rescheduled => "info",
+            _ => "light",
+        };
+    }
+}

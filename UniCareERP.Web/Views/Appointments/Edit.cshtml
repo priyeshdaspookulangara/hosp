@@ -1,0 +1,98 @@
+@model UniCareERP.Application.DTOs.Appointments.UpdateAppointmentDto
+
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>For Patient: @ViewBag.PatientName (@ViewBag.PatientCode)</p>
+<hr />
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="PatientId" /> @* PatientId generally shouldn't change on edit *@
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="DoctorId" class="control-label">Doctor</label>
+                <select asp-for="DoctorId" class="form-select" asp-items="ViewBag.DoctorId">
+                     <option value="">-- Select Doctor --</option>
+                </select>
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+        </div>
+         <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-select" asp-items="ViewBag.Status"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="AppointmentDateTime" class="control-label">Date & Time</label>
+                <input asp-for="AppointmentDateTime" type="datetime-local" class="form-control" />
+                <span asp-validation-for="AppointmentDateTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="DurationMinutes" class="control-label"></label>
+                <input asp-for="DurationMinutes" type="number" class="form-control" />
+                <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="ServiceType" class="control-label"></label>
+        <input asp-for="ServiceType" class="form-control" />
+        <span asp-validation-for="ServiceType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Reason" class="control-label">Reason for Visit</label>
+        <textarea asp-for="Reason" class="form-control" rows="2"></textarea>
+        <span asp-validation-for="Reason" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Notes" class="control-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-4">
+        <input type="submit" value="Update Appointment" class="btn btn-success" />
+        <a asp-action="Index" asp-route-searchDate="@Model.AppointmentDateTime.ToString("yyyy-MM-dd")" asp-route-doctorId="@Model.DoctorId" class="btn btn-secondary ms-2">Back to Schedule</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+     <script>
+        // To ensure datetime-local shows the correct value from model
+        document.addEventListener('DOMContentLoaded', function () {
+            var dateInput = document.querySelector('input[type="datetime-local"][name="AppointmentDateTime"]');
+            if (dateInput && dateInput.value) {
+                // ASP.NET Core might output a value that datetime-local doesn't fully parse if seconds/milliseconds are there
+                // or if timezone is off. Standard format is yyyy-MM-ddTHH:mm
+                var modelDate = new Date('@Model.AppointmentDateTime.ToString("o")'); // ISO 8601
+                if (!isNaN(modelDate.valueOf())) {
+                     // Format to yyyy-MM-ddTHH:mm
+                    var year = modelDate.getFullYear();
+                    var month = ('0' + (modelDate.getMonth() + 1)).slice(-2);
+                    var day = ('0' + modelDate.getDate()).slice(-2);
+                    var hours = ('0' + modelDate.getHours()).slice(-2);
+                    var minutes = ('0' + modelDate.getMinutes()).slice(-2);
+                    dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                }
+            }
+        });
+    </script>
+}

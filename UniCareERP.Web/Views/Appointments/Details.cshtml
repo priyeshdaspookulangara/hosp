@@ -1,0 +1,72 @@
+@model UniCareERP.Application.DTOs.Appointments.AppointmentDto
+
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Appointment on @Model.AppointmentDateTime.ToString("dddd, dd MMMM yyyy 'at' HH:mm")</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Patient</dt>
+        <dd class="col-sm-9">
+            <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId">
+                @Html.DisplayFor(model => model.PatientName) (@Html.DisplayFor(model => model.PatientCode))
+            </a>
+        </dd>
+
+        <dt class="col-sm-3">Doctor</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DoctorName)</dd>
+
+        <dt class="col-sm-3">Date & Time</dt>
+        <dd class="col-sm-9">@Model.AppointmentDateTime.ToString("dddd, dd MMMM yyyy 'at' HH:mm")</dd>
+
+        <dt class="col-sm-3">Duration</dt>
+        <dd class="col-sm-9">@Model.DurationMinutes minutes (Ends: @Model.EndDateTime.ToString("HH:mm"))</dd>
+
+        <dt class="col-sm-3">Service Type</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.ServiceType)</dd>
+
+        <dt class="col-sm-3">Reason for Visit</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Reason)</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+            <span class="badge bg-@(GetStatusBadgeClass(Model.Status))">
+                @Html.DisplayFor(model => model.StatusText)
+            </span>
+        </dd>
+
+        <dt class="col-sm-3">Notes</dt>
+        <dd class="col-sm-9">@Html.Raw(Model.Notes?.Replace("\n", "<br />"))</dd>
+
+        <dt class="col-sm-3">Created On</dt>
+        <dd class="col-sm-9">@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+        <dt class="col-sm-3">Last Modified</dt>
+        <dd class="col-sm-9">@Model.LastModifiedDate.ToString("yyyy-MM-dd HH:mm")</dd>
+    </dl>
+</div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Appointment</a>
+    <a asp-action="Index" asp-route-searchDate="@Model.AppointmentDateTime.ToString("yyyy-MM-dd")" asp-route-doctorId="@Model.DoctorId" class="btn btn-secondary ms-2">Back to Schedule</a>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(AppointmentStatus status)
+    {
+        return status switch
+        {
+            AppointmentStatus.Scheduled => "secondary",
+            AppointmentStatus.Confirmed => "primary",
+            AppointmentStatus.Completed => "success",
+            AppointmentStatus.CancelledByPatient => "warning",
+            AppointmentStatus.CancelledByClinic => "warning",
+            AppointmentStatus.NoShow => "danger",
+            AppointmentStatus.Rescheduled => "info",
+            _ => "light",
+        };
+    }
+}

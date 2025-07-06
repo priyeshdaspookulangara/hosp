@@ -4,6 +4,8 @@ using UniCareERP.Application.Services.Patients;
 using UniCareERP.Application.DTOs.Patients;
 using System;
 using System.Threading.Tasks;
+using UniCareERP.Application.Services.Appointments; // Added for IAppointmentService
+
 
 namespace UniCareERP.Web.Controllers
 {
@@ -11,11 +13,46 @@ namespace UniCareERP.Web.Controllers
     public class PatientsController : Controller
     {
         private readonly IPatientService _patientService;
+        private readonly IAppointmentService _appointmentService; // Added
         private readonly ILogger<PatientsController> _logger;
 
-        public PatientsController(IPatientService patientService, ILogger<PatientsController> logger)
+        public PatientsController(
+            IPatientService patientService,
+            IAppointmentService appointmentService, // Added
+            ILogger<PatientsController> logger)
         {
             _patientService = patientService;
+            _appointmentService = appointmentService; // Added
+            _logger = logger;
+        }
+
+        // GET: Patients
+        public async Task<IActionResult> Index()
+        {
+            var patients = await _patientService.GetAllPatientsAsync();
+            return View(patients);
+        }
+
+using UniCareERP.Application.Services.Appointments; // Added for IAppointmentService
+
+// ... other using statements ...
+
+namespace UniCareERP.Web.Controllers
+{
+    [Authorize]
+    public class PatientsController : Controller
+    {
+        private readonly IPatientService _patientService;
+        private readonly IAppointmentService _appointmentService; // Added
+        private readonly ILogger<PatientsController> _logger;
+
+        public PatientsController(
+            IPatientService patientService,
+            IAppointmentService appointmentService, // Added
+            ILogger<PatientsController> logger)
+        {
+            _patientService = patientService;
+            _appointmentService = appointmentService; // Added
             _logger = logger;
         }
 
@@ -39,6 +76,10 @@ namespace UniCareERP.Web.Controllers
             {
                 return NotFound();
             }
+
+            // Fetch appointments for this patient
+            ViewBag.PatientAppointments = await _appointmentService.GetAppointmentsForPatientAsync(id.Value);
+
             return View(patient);
         }
 
@@ -144,6 +185,10 @@ namespace UniCareERP.Web.Controllers
             {
                 return NotFound();
             }
+
+            // Fetch appointments for this patient
+            ViewBag.PatientAppointments = await _appointmentService.GetAppointmentsForPatientAsync(id.Value);
+
             return View(patient);
         }
 
