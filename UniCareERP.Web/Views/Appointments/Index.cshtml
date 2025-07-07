@@ -41,7 +41,8 @@
     </div>
 </div>
 
-
+@* The existing table-based list will be replaced by the calendar *@
+@*
 <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -95,6 +96,9 @@
         }
     </tbody>
 </table>
+*@
+
+<div id="calendar"></div>
 
 @functions {
     string GetStatusBadgeClass(AppointmentStatus status)
@@ -111,4 +115,96 @@
             _ => "light",
         };
     }
+}
+
+@section Styles {
+    <link href="~/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
+    <style>
+        /* Custom styles for the calendar page if needed */
+        #calendar {
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/lib/fullcalendar/fullcalendar.min.js"></script>
+    <script>
+        // JavaScript for FullCalendar initialization will go here in a later step
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Default view
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' // View options
+                },
+                events: {
+                    url: '@Url.Action("GetCalendarEvents")', // API endpoint
+                    failure: function() {
+                        alert('There was an error while fetching events!');
+                    }
+                    // FullCalendar will automatically append 'start' and 'end' parameters
+                },
+                editable: false, // For now, not supporting drag-and-drop editing
+                selectable: true, // Allow date clicking
+                select: function(info) {
+                    // When a date/time is selected (clicked)
+                    var createUrl = '@Url.Action("Create")' + '?initialDate=' + info.startStr.substring(0,10); // Pass date part
+                    if (info.allDay) {
+                         // If an all-day slot in month view is clicked, default to a specific time e.g. 9 AM
+                        createUrl = '@Url.Action("Create")' + '?initialDate=' + info.startStr.substring(0,10) + "T09:00:00";
+                    } else {
+                        // For timeGrid views, startStr includes time
+                         createUrl = '@Url.Action("Create")' + '?initialDate=' + info.startStr;
+                    }
+
+                    var currentDoctorId = "@currentDoctorId"; // Get doctor from server-side filter if set
+                    if(currentDoctorId){
+                        createUrl += '&doctorId=' + encodeURIComponent(currentDoctorId);
+                    }
+                    window.location.href = createUrl;
+                },
+                eventClick: function(info) {
+                    // When an event is clicked
+                    info.jsEvent.preventDefault(); // Prevent browser from following the A tag's href if event has a URL
+                    if (info.event.url) {
+                        window.location.href = info.event.url; // Go to the event's details page
+                    }
+                },
+                loading: function(isLoading) {
+                    // Optionally add a loading indicator
+                    // console.log(isLoading ? 'Loading events...' : 'Events loaded.');
+                },
+                // Set initialDate based on server-side filter if available, otherwise FullCalendar defaults to current date
+                initialDate: '@currentSearchDate',
+
+                // Optionally, you could try to re-apply doctor filter here if you modify GetCalendarEvents
+                // to accept a doctorId. For now, the API fetches all doctors.
+                // eventSources: [ { url: '@Url.Action("GetCalendarEvents")', extraParams: { doctorId: currentDoctorId } } ]
+            });
+            calendar.render();
+
+            // If server-side doctor filter changes, you might need to refetch events.
+            // This is a basic setup. A more robust solution might use JS to handle filter changes and call calendar.refetchEvents().
+            var doctorDropdown = document.querySelector('select[name="doctorId"]');
+            var dateInput = document.querySelector('input[name="searchDate"]');
+
+            if(doctorDropdown) {
+                doctorDropdown.addEventListener('change', function() {
+                    // This form submission will reload the page and calendar will use new initialDate/doctor for initial display
+                    // but GetCalendarEvents is not yet using doctorId from client-side for dynamic refetch.
+                    // this.form.submit(); // Or handle with JS refetch
+                });
+            }
+             if(dateInput) {
+                dateInput.addEventListener('change', function() {
+                    // this.form.submit(); // Or handle with JS refetch
+                });
+            }
+
+        });
+    </script>
 }

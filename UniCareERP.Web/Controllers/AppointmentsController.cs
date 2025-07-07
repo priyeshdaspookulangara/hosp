@@ -175,6 +175,39 @@ namespace UniCareERP.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #region API Methods for Calendar
+        [HttpGet]
+        public async Task<IActionResult> GetCalendarEvents(DateTime start, DateTime end)
+        {
+            // FullCalendar sends dates in ISO8601 format, usually UTC or with timezone.
+            // ASP.NET Core model binding should handle this.
+            // Ensure the date range is reasonable to prevent fetching too much data.
+            if ((end - start).TotalDays > 60) // Example limit: 2 months
+            {
+                // Consider adjusting this limit based on expected usage.
+                // return BadRequest("Date range too large.");
+                // For now, let's allow it but be mindful.
+            }
+
+            var appointments = await _appointmentService.GetAppointmentsByDateRangeAsync(start, end);
+
+            var calendarEvents = appointments.Select(a => new
+            {
+                id = a.Id.ToString(),
+                title = $"{a.PatientName} ({a.PatientCode}) - {a.ServiceType ?? "Appointment"}",
+                start = a.AppointmentDateTime.ToString("o"), // ISO 8601 format
+                end = a.EndDateTime.ToString("o"),       // ISO 8601 format for end time
+                url = Url.Action("Details", new { id = a.Id }), // Link to appointment details
+                // You can add more properties like color based on status, doctor, etc.
+                // Example: backgroundColor = GetEventColorByStatus(a.Status),
+                //          textColor = "white"
+                allDay = false // Assuming appointments are not all-day events
+            });
+
+            return Json(calendarEvents);
+        }
+        #endregion
+
 
         private async Task PopulatePatientsAndDoctorsViewBag(Guid? selectedPatientId = null, string? selectedDoctorId = null)
         {

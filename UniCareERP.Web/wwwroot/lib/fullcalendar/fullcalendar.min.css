@@ -1,0 +1,20 @@
+/*
+This is a placeholder for fullcalendar.min.css
+In a real scenario, download this file from https://fullcalendar.io/
+Example: FullCalendar Core v6.x.x
+Content would be the minified CSS code for the FullCalendar library.
+*/
+
+/* Basic placeholder style to indicate it's loaded */
+body {
+    /* Placeholder just to ensure file is considered by browser, actual styles are complex */
+}
+
+/* Example of how FullCalendar might style its elements:
+.fc {
+    direction: ltr;
+    text-align: left;
+}
+... many more styles ...
+*/
+/* End of placeholder */
