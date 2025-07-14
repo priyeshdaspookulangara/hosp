@@ -70,6 +70,7 @@
 <div class="mt-3">
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Patient</a>
     <a asp-controller="Appointments" asp-action="Create" asp-route-patientId="@Model.Id" class="btn btn-success ms-2">Schedule New Appointment</a>
+    <a asp-controller="Invoices" asp-action="Create" asp-route-patientId="@Model.Id" class="btn btn-warning ms-2">Create New Invoice</a>
     <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
 </div>
 
@@ -131,6 +132,68 @@ else
             UniCareERP.Domain.Enums.AppointmentStatus.CancelledByClinic => "warning",
             UniCareERP.Domain.Enums.AppointmentStatus.NoShow => "danger",
             UniCareERP.Domain.Enums.AppointmentStatus.Rescheduled => "info",
+            _ => "light",
+        };
+    }
+}
+
+<hr class="mt-4 mb-3"/>
+<h3>Patient Invoices</h3>
+
+@{
+    var invoices = ViewBag.PatientInvoices as IEnumerable<UniCareERP.Application.DTOs.Finance.InvoiceDto>;
+}
+
+@if (invoices != null && invoices.Any())
+{
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Invoice #</th>
+                <th>Invoice Date</th>
+                <th>Total</th>
+                <th>Amount Due</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inv in invoices.OrderByDescending(i => i.InvoiceDate))
+            {
+                <tr>
+                    <td>@inv.InvoiceNumber</td>
+                    <td>@inv.InvoiceDate.ToString("yyyy-MM-dd")</td>
+                    <td>@inv.TotalAmount.ToString("C")</td>
+                    <td>@inv.AmountDue.ToString("C")</td>
+                    <td>
+                        <span class="badge bg-@(GetInvoiceStatusBadgeClass(inv.Status))">
+                           @inv.Status.ToString()
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-controller="Invoices" asp-action="Details" asp-route-id="@inv.Id" class="btn btn-xs btn-outline-info">View Invoice</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No invoices found for this patient.</p>
+}
+
+@functions {
+    string GetInvoiceStatusBadgeClass(UniCareERP.Domain.Enums.InvoiceStatus status)
+    {
+        return status switch
+        {
+            UniCareERP.Domain.Enums.InvoiceStatus.Draft => "secondary",
+            UniCareERP.Domain.Enums.InvoiceStatus.Sent => "info",
+            UniCareERP.Domain.Enums.InvoiceStatus.Paid => "success",
+            UniCareERP.Domain.Enums.InvoiceStatus.PartiallyPaid => "primary",
+            UniCareERP.Domain.Enums.InvoiceStatus.Overdue => "warning",
+            UniCareERP.Domain.Enums.InvoiceStatus.Void => "danger",
             _ => "light",
         };
     }

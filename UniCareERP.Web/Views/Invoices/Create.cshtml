@@ -1,0 +1,117 @@
+@model UniCareERP.Application.DTOs.Finance.CreateInvoiceDto
+
+@{
+    ViewData["Title"] = "Create New Invoice";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <input type="hidden" asp-for="SourceAppointmentId" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="PatientId" class="control-label">Patient</label>
+                <select asp-for="PatientId" class="form-select" asp-items="ViewBag.PatientId">
+                    <option value="">-- Select Patient --</option>
+                </select>
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="InvoiceDate" class="control-label"></label>
+                <input asp-for="InvoiceDate" type="date" class="form-control" />
+                <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="DueDate" class="control-label"></label>
+                <input asp-for="DueDate" type="date" class="form-control" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Invoice Items</h4>
+    <hr />
+
+    <div id="invoice-items-container">
+        @* Items will be added here by JavaScript *@
+    </div>
+
+    <button type="button" id="add-item-btn" class="btn btn-info mt-2">Add Line Item</button>
+
+    <div class="form-group mt-4">
+        <input type="submit" value="Create Invoice" class="btn btn-success" />
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('invoice-items-container');
+            const addButton = document.getElementById('add-item-btn');
+            let itemIndex = 0;
+
+            function createItemRow() {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('row', 'mb-2', 'align-items-center', 'invoice-item-row');
+                itemDiv.innerHTML = `
+                    <div class="col-md-5">
+                        <label class="form-label visually-hidden">Description</label>
+                        <input type="text" name="InvoiceItems[${itemIndex}].Description" class="form-control" placeholder="Item Description" required />
+                    </div>
+                    <div class="col-md-2">
+                         <label class="form-label visually-hidden">Quantity</label>
+                        <input type="number" name="InvoiceItems[${itemIndex}].Quantity" class="form-control item-quantity" placeholder="Qty" required min="1" value="1" />
+                    </div>
+                    <div class="col-md-2">
+                         <label class="form-label visually-hidden">Unit Price</label>
+                        <input type="number" name="InvoiceItems[${itemIndex}].UnitPrice" class="form-control item-price" placeholder="Unit Price" step="0.01" required min="0" />
+                    </div>
+                    <div class="col-md-2">
+                        <strong class="item-total-price"></strong>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm remove-item-btn">Remove</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+                itemIndex++;
+            }
+
+            // Add the first item row initially
+            createItemRow();
+
+            addButton.addEventListener('click', createItemRow);
+
+            container.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-item-btn')) {
+                    e.target.closest('.invoice-item-row').remove();
+                    updateAllTotals();
+                }
+            });
+
+            // Optional: Live calculation of total price for a line item
+            container.addEventListener('input', function (e) {
+                if (e.target && (e.target.classList.contains('item-quantity') || e.target.classList.contains('item-price'))) {
+                    const row = e.target.closest('.invoice-item-row');
+                    const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                    const totalEl = row.querySelector('.item-total-price');
+                    totalEl.textContent = (quantity * price).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                }
+            });
+
+        });
+    </script>
+}

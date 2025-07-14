@@ -1,0 +1,142 @@
+@model UniCareERP.Application.DTOs.Finance.InvoiceDto
+
+@{
+    ViewData["Title"] = $"Invoice {Model.InvoiceNumber}";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="container mt-4 mb-4 p-3 d-print-inline-block">
+    <div class="row">
+        <div class="col-6">
+            <h3>UniCare ERP</h3>
+            <p>123 Health St.<br>Wellsville, MD 21795</p>
+        </div>
+        <div class="col-6 text-end">
+            <h2>INVOICE</h2>
+            <p><strong>Invoice #:</strong> @Model.InvoiceNumber</p>
+            <p><strong>Status:</strong> <span class="badge fs-6 bg-@(GetStatusBadgeClass(Model.Status))">@Model.StatusText</span></p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-6">
+            <strong>Bill To:</strong>
+            <p>
+                @Model.PatientName (@Model.PatientCode)<br>
+                <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId">View Patient Details</a>
+            </p>
+        </div>
+        <div class="col-6 text-end">
+            <p><strong>Invoice Date:</strong> @Model.InvoiceDate.ToString("MMMM dd, yyyy")</p>
+            <p><strong>Due Date:</strong> @Model.DueDate.ToString("MMMM dd, yyyy")</p>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+            <thead class="bg-light">
+                <tr>
+                    <th>Description</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InvoiceItems)
+                {
+                    <tr>
+                        <td>@item.Description</td>
+                        <td class="text-center">@item.Quantity</td>
+                        <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                        <td class="text-end">@item.TotalPrice.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="text-end"><strong>Subtotal</strong></td>
+                    <td class="text-end">@Model.TotalAmount.ToString("C")</td>
+                </tr>
+                 <tr>
+                    <td colspan="2"></td>
+                    <td class="text-end"><strong>Amount Paid</strong></td>
+                    <td class="text-end text-success">(@Model.AmountPaid.ToString("C"))</td>
+                </tr>
+                 <tr>
+                    <td colspan="2"></td>
+                    <td class="text-end"><strong>Amount Due</strong></td>
+                    <td class="text-end fw-bold">@Model.AmountDue.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="row mt-4 d-print-none">
+        <div class="col-12">
+            <h5>Actions</h5>
+            <hr/>
+            <div class="d-flex flex-wrap gap-2">
+                 @if (Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Paid && Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Void)
+                 {
+                    <form asp-action="AddPayment" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="input-group">
+                             <span class="input-group-text">$</span>
+                            <input type="number" name="amount" class="form-control" placeholder="Payment Amount" step="0.01" required min="0.01" />
+                            <button type="submit" class="btn btn-success">Add Payment</button>
+                        </div>
+                    </form>
+                 }
+
+                @if (Model.Status == UniCareERP.Domain.Enums.InvoiceStatus.Draft)
+                {
+                    <form asp-action="UpdateStatus" method="post">
+                         <input type="hidden" name="id" value="@Model.Id" />
+                         <input type="hidden" name="status" value="@UniCareERP.Domain.Enums.InvoiceStatus.Sent" />
+                         <button type="submit" class="btn btn-info">Mark as Sent</button>
+                    </form>
+                }
+
+                @if (Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Void)
+                {
+                     <form asp-action="UpdateStatus" method="post" onsubmit="return confirm('Are you sure you want to void this invoice?');">
+                         <input type="hidden" name="id" value="@Model.Id" />
+                         <input type="hidden" name="status" value="@UniCareERP.Domain.Enums.InvoiceStatus.Void" />
+                         <button type="submit" class="btn btn-danger">Void Invoice</button>
+                    </form>
+                }
+                <button onclick="window.print();" class="btn btn-secondary">Print Invoice</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions {
+    string GetStatusBadgeClass(UniCareERP.Domain.Enums.InvoiceStatus status)
+    {
+        return status switch
+        {
+            UniCareERP.Domain.Enums.InvoiceStatus.Draft => "secondary",
+            UniCareERP.Domain.Enums.InvoiceStatus.Sent => "info",
+            UniCareERP.Domain.Enums.InvoiceStatus.Paid => "success",
+            UniCareERP.Domain.Enums.InvoiceStatus.PartiallyPaid => "primary",
+            UniCareERP.Domain.Enums.InvoiceStatus.Overdue => "warning",
+            UniCareERP.Domain.Enums.InvoiceStatus.Void => "danger",
+            _ => "light",
+        };
+    }
+}

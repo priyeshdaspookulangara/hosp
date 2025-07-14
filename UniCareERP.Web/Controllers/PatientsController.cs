@@ -4,7 +4,8 @@ using UniCareERP.Application.Services.Patients;
 using UniCareERP.Application.DTOs.Patients;
 using System;
 using System.Threading.Tasks;
-using UniCareERP.Application.Services.Appointments; // Added for IAppointmentService
+using UniCareERP.Application.Services.Appointments;
+using UniCareERP.Application.Services.Finance; // Added for IInvoiceService
 
 
 namespace UniCareERP.Web.Controllers
@@ -13,16 +14,19 @@ namespace UniCareERP.Web.Controllers
     public class PatientsController : Controller
     {
         private readonly IPatientService _patientService;
-        private readonly IAppointmentService _appointmentService; // Added
+        private readonly IAppointmentService _appointmentService;
+        private readonly IInvoiceService _invoiceService; // Added
         private readonly ILogger<PatientsController> _logger;
 
         public PatientsController(
             IPatientService patientService,
-            IAppointmentService appointmentService, // Added
+            IAppointmentService appointmentService,
+            IInvoiceService invoiceService, // Added
             ILogger<PatientsController> logger)
         {
             _patientService = patientService;
-            _appointmentService = appointmentService; // Added
+            _appointmentService = appointmentService;
+            _invoiceService = invoiceService; // Added
             _logger = logger;
         }
 
@@ -79,6 +83,9 @@ namespace UniCareERP.Web.Controllers
 
             // Fetch appointments for this patient
             ViewBag.PatientAppointments = await _appointmentService.GetAppointmentsForPatientAsync(id.Value);
+
+            // Fetch invoices for this patient
+            ViewBag.PatientInvoices = await _invoiceService.GetInvoicesForPatientAsync(id.Value);
 
             return View(patient);
         }

@@ -51,6 +51,7 @@
 </div>
 <div class="mt-3">
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Appointment</a>
+    <a asp-controller="Invoices" asp-action="Create" asp-route-patientId="@Model.PatientId" asp-route-appointmentId="@Model.Id" class="btn btn-warning ms-2">Generate Invoice</a>
     <a asp-action="Index" asp-route-searchDate="@Model.AppointmentDateTime.ToString("yyyy-MM-dd")" asp-route-doctorId="@Model.DoctorId" class="btn btn-secondary ms-2">Back to Schedule</a>
 </div>
 

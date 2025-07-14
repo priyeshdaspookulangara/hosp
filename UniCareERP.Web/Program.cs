@@ -29,7 +29,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 builder.Services.AddScoped<UniCareERP.Application.Services.IUserService, UniCareERP.Application.Services.UserService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.IRoleService, UniCareERP.Application.Services.RoleService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPatientService, UniCareERP.Application.Services.Patients.PatientService>();
-builder.Services.AddScoped<UniCareERP.Application.Services.Appointments.IAppointmentService, UniCareERP.Application.Services.Appointments.AppointmentService>(); // Added AppointmentService
+builder.Services.AddScoped<UniCareERP.Application.Services.Appointments.IAppointmentService, UniCareERP.Application.Services.Appointments.AppointmentService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IInvoiceService, UniCareERP.Application.Services.Finance.InvoiceService>(); // Added InvoiceService
 
 builder.Services.AddControllersWithViews();
 
