@@ -1,0 +1,215 @@
+@{
+    ViewData["Title"] = "Point of Sale";
+}
+
+<div id="pos-container" class="container-fluid">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+
+    <div class="row">
+        <!-- Left side: Sale items list -->
+        <div class="col-md-8">
+            <h4>Sale Items</h4>
+            <div class="row g-2 align-items-center mb-2">
+                 <div class="col-auto">
+                    <label for="item-search" class="col-form-label">Search for Item:</label>
+                 </div>
+                 <div class="col">
+                    <input type="text" id="item-search" class="form-control" placeholder="Type item name or code..." />
+                 </div>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th style="width: 15%;">Quantity</th>
+                        <th style="width: 15%;">Unit Price</th>
+                        <th style="width: 15%;">Total</th>
+                        <th style="width: 5%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="sale-items-table">
+                    <!-- Sale items will be added here by JS -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Grand Total</strong></td>
+                        <td id="grand-total" class="fw-bold fs-5">$0.00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Right side: Customer and Payment -->
+        <div class="col-md-4">
+            <h4>Customer & Payment</h4>
+            <form id="sale-form">
+                @Html.AntiForgeryToken()
+                <div class="form-group mb-2">
+                    <label for="PatientId" class="form-label">Patient (Optional)</label>
+                    <select name="PatientId" id="PatientId" class="form-select" asp-items="ViewBag.PatientId">
+                        <option value="">-- Walk-in Customer --</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label for="PaymentMethod" class="form-label">Payment Method</label>
+                    <select name="PaymentMethod" id="PaymentMethod" class="form-select" asp-items="Html.GetEnumSelectList<UniCareERP.Domain.Enums.PaymentMethod>()"></select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label for="Notes" class="form-label">Notes</label>
+                    <textarea name="Notes" id="Notes" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" id="complete-sale-btn" class="btn btn-success btn-lg">Complete Sale</button>
+                </div>
+            </form>
+            <div id="sale-error-message" class="alert alert-danger mt-3" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.min.css" />
+}
+
+@section Scripts {
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $(function () {
+            let saleItems = []; // Our "shopping cart"
+
+            // Autocomplete for item search
+            $("#item-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Url.Action("SearchInventoryItems")",
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    // Add item to our cart
+                    addItemToSale(ui.item);
+                    // Clear the search box
+                    this.value = "";
+                    return false;
+                }
+            });
+
+            function addItemToSale(item) {
+                // Check if item is already in the cart
+                const existingItem = saleItems.find(i => i.id === item.id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    saleItems.push({
+                        id: item.id,
+                        label: item.label,
+                        price: item.price,
+                        stock: item.stock,
+                        quantity: 1
+                    });
+                }
+                renderSaleItems();
+            }
+
+            function renderSaleItems() {
+                const tableBody = $("#sale-items-table");
+                tableBody.empty();
+                let grandTotal = 0;
+
+                saleItems.forEach((item, index) => {
+                    const total = item.quantity * item.price;
+                    grandTotal += total;
+                    const row = `
+                        <tr data-id="${item.id}">
+                            <td>${item.label.split('-')[0]}</td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm item-quantity" value="${item.quantity}" min="1" max="${item.stock}" data-index="${index}" />
+                            </td>
+                            <td>$${item.price.toFixed(2)}</td>
+                            <td class="item-total">$${total.toFixed(2)}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm remove-item" data-index="${index}">&times;</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.append(row);
+                });
+
+                $("#grand-total").text(`$${grandTotal.toFixed(2)}`);
+            }
+
+            // Event delegation for changing quantity or removing items
+            $("#sale-items-table").on("change", ".item-quantity", function () {
+                const index = $(this).data("index");
+                const newQty = parseInt($(this).val());
+                if(newQty > 0 && newQty <= saleItems[index].stock) {
+                    saleItems[index].quantity = newQty;
+                } else {
+                    // Revert to old value if invalid
+                    $(this).val(saleItems[index].quantity);
+                }
+                renderSaleItems();
+            });
+
+            $("#sale-items-table").on("click", ".remove-item", function () {
+                const index = $(this).data("index");
+                saleItems.splice(index, 1);
+                renderSaleItems();
+            });
+
+
+            // Handle final sale submission
+            $("#sale-form").on("submit", function (e) {
+                e.preventDefault();
+                $("#sale-error-message").hide();
+
+                if (saleItems.length === 0) {
+                    $("#sale-error-message").text("Please add at least one item to the sale.").show();
+                    return;
+                }
+
+                const saleData = {
+                    PatientId: $("#PatientId").val() || null,
+                    PaymentMethod: $("#PaymentMethod").val(),
+                    Notes: $("#Notes").val(),
+                    Items: saleItems.map(item => ({
+                        InventoryItemId: item.id,
+                        Quantity: item.quantity,
+                        UnitPrice: item.price
+                    }))
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CreateSale")",
+                    data: {
+                        __RequestVerificationToken: $(this).find('input[name="__RequestVerificationToken"]').val(),
+                        createDto: saleData
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            $("#sale-error-message").text(response.message || "An unknown error occurred.").show();
+                        }
+                    },
+                    error: function() {
+                        $("#sale-error-message").text("A server error occurred. Please try again.").show();
+                    }
+                });
+            });
+
+        });
+    </script>
+}

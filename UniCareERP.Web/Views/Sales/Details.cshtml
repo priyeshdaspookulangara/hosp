@@ -1,0 +1,87 @@
+@model UniCareERP.Application.DTOs.Inventory.SaleDto
+
+@{
+    ViewData["Title"] = $"Sale Details {Model.SaleNumber}";
+}
+
+<div class="container mt-4 mb-4 p-3 d-print-inline-block">
+    <div class="row">
+        <div class="col-6">
+            <h3>Sale Receipt</h3>
+            <p><strong>Sale #:</strong> @Model.SaleNumber</p>
+        </div>
+        <div class="col-6 text-end">
+            <p><strong>Sale Date:</strong> @Model.SaleDate.ToString("MMMM dd, yyyy HH:mm")</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-6">
+            <strong>Customer:</strong>
+            <p>
+                @if(Model.PatientId.HasValue)
+                {
+                    <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId">@Model.PatientName</a>
+                }
+                else
+                {
+                    @Model.PatientName
+                }
+            </p>
+        </div>
+        <div class="col-6 text-end">
+            <strong>Payment Method:</strong>
+            <p>@Model.PaymentMethodText</p>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+            <thead class="bg-light">
+                <tr>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.ItemCode</td>
+                        <td>@item.ItemName</td>
+                        <td class="text-center">@item.Quantity</td>
+                        <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                        <td class="text-end">@item.TotalPrice.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="text-end"><strong>Grand Total</strong></td>
+                    <td class="text-end fw-bold">@Model.TotalAmount.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+     @if (!string.IsNullOrEmpty(Model.Notes))
+    {
+        <div class="mt-3">
+            <strong>Notes:</strong>
+            <p>@Model.Notes</p>
+        </div>
+    }
+
+    <div class="row mt-4 d-print-none">
+        <div class="col-12">
+             <button onclick="window.print();" class="btn btn-secondary">Print Receipt</button>
+             <a asp-action="Index" class="btn btn-outline-secondary ms-2">Back to Sales History</a>
+        </div>
+    </div>
+</div>
