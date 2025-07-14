@@ -1,0 +1,65 @@
+@model UniCareERP.Application.DTOs.HR.EmployeeDto
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<h1>@Model.FullName <span class="text-muted fs-5">(@Model.EmployeeCode)</span></h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>Employee Information</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Employee Code</dt>
+            <dd class="col-sm-8">@Model.EmployeeCode</dd>
+
+            <dt class="col-sm-4">Full Name</dt>
+            <dd class="col-sm-8">@Model.FullName</dd>
+
+            <dt class="col-sm-4">Job Title</dt>
+            <dd class="col-sm-8">@Model.JobTitle</dd>
+
+            <dt class="col-sm-4">Department</dt>
+            <dd class="col-sm-8">@Model.Department</dd>
+
+            <dt class="col-sm-4">Hire Date</dt>
+            <dd class="col-sm-8">@Model.HireDate.ToString("MMMM dd, yyyy")</dd>
+
+            <dt class="col-sm-4">Login Email</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+
+            <dt class="col-sm-4">Phone Number</dt>
+            <dd class="col-sm-8">@Model.PhoneNumber</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">
+                 @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactive</span>
+                    }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Employee</a>
+    @if (Model.IsActive)
+    {
+        <form asp-action="Deactivate" asp-route-id="@Model.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to deactivate this employee? This will disable their system access.');">
+            <button type="submit" class="btn btn-danger ms-2">Deactivate Employee</button>
+        </form>
+    }
+    else
+    {
+        <form asp-action="Reactivate" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-success ms-2">Reactivate Employee</button>
+        </form>
+    }
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</div>
