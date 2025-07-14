@@ -1,0 +1,178 @@
+@model UniCareERP.Application.DTOs.Inventory.PurchaseOrderDto
+
+@{
+    ViewData["Title"] = $"Purchase Order {Model.PurchaseOrderNumber}";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+@if (TempData["WarningMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["WarningMessage"]</div>
+}
+
+<div class="container mt-4 mb-4 p-3 d-print-inline-block">
+    <div class="row">
+        <div class="col-6">
+            <h3>Purchase Order</h3>
+            <p><strong>PO #:</strong> @Model.PurchaseOrderNumber</p>
+            <p><strong>Status:</strong> <span class="badge fs-6 bg-@(GetStatusBadgeClass(Model.Status))">@Model.StatusText</span></p>
+        </div>
+        <div class="col-6 text-end">
+            <p><strong>Order Date:</strong> @Model.OrderDate.ToString("MMMM dd, yyyy")</p>
+            <p><strong>Expected Delivery:</strong> @Model.ExpectedDeliveryDate?.ToString("MMMM dd, yyyy")</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <strong>Supplier Information:</strong>
+            <p>@Model.SupplierInfo</p>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+            <thead class="bg-light">
+                <tr>
+                    <th>Item Code</th>
+                    <th>Item Name</th>
+                    <th class="text-center">Qty Ordered</th>
+                    <th class="text-center">Qty Received</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.ItemCode</td>
+                        <td>@item.ItemName</td>
+                        <td class="text-center">@item.QuantityOrdered</td>
+                        <td class="text-center">@item.QuantityReceived</td>
+                        <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                        <td class="text-end">@item.TotalPrice.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4"></td>
+                    <td class="text-end"><strong>Grand Total</strong></td>
+                    <td class="text-end fw-bold">@Model.TotalAmount.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Notes))
+    {
+        <div class="mt-3">
+            <strong>Notes:</strong>
+            <p>@Model.Notes</p>
+        </div>
+    }
+
+    <div class="row mt-4 d-print-none">
+        <div class="col-12">
+            <h5>Actions</h5>
+            <hr/>
+            <div class="d-flex flex-wrap gap-2">
+                @if (Model.Status == UniCareERP.Domain.Enums.PurchaseOrderStatus.Pending)
+                {
+                    <form asp-action="Approve" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-success">Approve PO</button>
+                    </form>
+                    <form asp-action="Cancel" method="post" onsubmit="return confirm('Are you sure you want to cancel this PO?');">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger">Cancel PO</button>
+                    </form>
+                }
+
+                @if (Model.Status == UniCareERP.Domain.Enums.PurchaseOrderStatus.Approved || Model.Status == UniCareERP.Domain.Enums.PurchaseOrderStatus.PartiallyReceived)
+                {
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#receiveGoodsModal">
+                        Receive Goods
+                    </button>
+                }
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Receive Goods Modal -->
+<div class="modal fade" id="receiveGoodsModal" tabindex="-1" aria-labelledby="receiveGoodsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form asp-action="ReceiveGoods" method="post">
+          <input type="hidden" name="id" value="@Model.Id" />
+          <div class="modal-header">
+            <h5 class="modal-title" id="receiveGoodsModalLabel">Receive Goods for PO @Model.PurchaseOrderNumber</h5>
+            <button type="button" class="btn-close" data-bs-toggle="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Enter the quantity of items you are receiving now. Leave blank or 0 if not receiving.</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Already Received</th>
+                        <th>Qty to Receive Now</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        var item = Model.Items[i];
+                        if (item.QuantityReceived < item.QuantityOrdered)
+                        {
+                            <tr>
+                                <td>@item.ItemName (@item.ItemCode)</td>
+                                <td>@item.QuantityOrdered</td>
+                                <td>@item.QuantityReceived</td>
+                                <td>
+                                    <input type="hidden" name="items[@i].PurchaseOrderItemId" value="@item.Id" />
+                                    <input type="number" name="items[@i].QuantityReceived" class="form-control" value="0" min="0" max="@(item.QuantityOrdered - item.QuantityReceived)" />
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit Received Goods</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+@functions {
+    string GetStatusBadgeClass(UniCareERP.Domain.Enums.PurchaseOrderStatus status)
+    {
+        return status switch
+        {
+            UniCareERP.Domain.Enums.PurchaseOrderStatus.Pending => "secondary",
+            UniCareERP.Domain.Enums.PurchaseOrderStatus.Approved => "info",
+            UniCareERP.Domain.Enums.PurchaseOrderStatus.PartiallyReceived => "primary",
+            UniCareERP.Domain.Enums.PurchaseOrderStatus.Completed => "success",
+            UniCareERP.Domain.Enums.PurchaseOrderStatus.Cancelled => "danger",
+            _ => "light",
+        };
+    }
+}

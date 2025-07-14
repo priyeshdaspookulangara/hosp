@@ -1,0 +1,108 @@
+@model UniCareERP.Application.DTOs.Inventory.CreatePurchaseOrderDto
+
+@{
+    ViewData["Title"] = "Create Purchase Order";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="SupplierInfo" class="control-label">Supplier Information</label>
+                <input asp-for="SupplierInfo" class="form-control" />
+                <span asp-validation-for="SupplierInfo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="ExpectedDeliveryDate" class="control-label"></label>
+                <input asp-for="ExpectedDeliveryDate" type="date" class="form-control" />
+                <span asp-validation-for="ExpectedDeliveryDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="Notes" class="control-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <h4 class="mt-4">Order Items</h4>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th style="width: 15%;">Quantity Ordered</th>
+                <th style="width: 15%;">Unit Price (Cost)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="po-items-container">
+            @* Items will be added here by JavaScript *@
+        </tbody>
+    </table>
+
+    <button type="button" id="add-item-btn" class="btn btn-info mt-2">Add Item</button>
+
+    <div class="form-group mt-4">
+        <input type="submit" value="Create Purchase Order" class="btn btn-success" />
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('po-items-container');
+            const addButton = document.getElementById('add-item-btn');
+            const inventoryItemsSelectList = @Html.Raw(Json.Serialize(ViewBag.InventoryItems));
+            let itemIndex = 0;
+
+            function createItemRow() {
+                const row = document.createElement('tr');
+                row.classList.add('po-item-row');
+
+                let options = '<option value="">-- Select Item --</option>';
+                inventoryItemsSelectList.forEach(item => {
+                    options += `<option value="${item.Value}">${item.Text}</option>`;
+                });
+
+                row.innerHTML = `
+                    <td>
+                        <select name="Items[${itemIndex}].InventoryItemId" class="form-select" required>${options}</select>
+                    </td>
+                    <td>
+                        <input type="number" name="Items[${itemIndex}].QuantityOrdered" class="form-control" placeholder="Quantity" required min="1" value="1" />
+                    </td>
+                    <td>
+                        <input type="number" name="Items[${itemIndex}].UnitPrice" class="form-control" placeholder="Cost Price" step="0.01" required min="0" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-item-btn">Remove</button>
+                    </td>
+                `;
+                container.appendChild(row);
+                itemIndex++;
+            }
+
+            // Add the first item row initially
+            createItemRow();
+
+            addButton.addEventListener('click', createItemRow);
+
+            container.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-item-btn')) {
+                    e.target.closest('.po-item-row').remove();
+                }
+            });
+        });
+    </script>
+}
