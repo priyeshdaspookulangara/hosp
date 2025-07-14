@@ -30,7 +30,8 @@ builder.Services.AddScoped<UniCareERP.Application.Services.IUserService, UniCare
 builder.Services.AddScoped<UniCareERP.Application.Services.IRoleService, UniCareERP.Application.Services.RoleService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPatientService, UniCareERP.Application.Services.Patients.PatientService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Appointments.IAppointmentService, UniCareERP.Application.Services.Appointments.AppointmentService>();
-builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IInvoiceService, UniCareERP.Application.Services.Finance.InvoiceService>(); // Added InvoiceService
+builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IInvoiceService, UniCareERP.Application.Services.Finance.InvoiceService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Inventory.IInventoryService, UniCareERP.Application.Services.Inventory.InventoryService>(); // Added InventoryService
 
 builder.Services.AddControllersWithViews();
 

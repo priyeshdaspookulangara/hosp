@@ -1,0 +1,103 @@
+@model UniCareERP.Application.DTOs.Inventory.CreateInventoryItemDto
+
+@{
+    ViewData["Title"] = "Add New Inventory Item";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Create a new item in the master list. Initial stock quantity will be zero and must be updated via a stock adjustment or purchase.</p>
+<hr />
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group mb-2">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group mb-2">
+                <label asp-for="Category" class="control-label"></label>
+                <input asp-for="Category" class="form-control" placeholder="e.g., Medicine, Supply, Equipment" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group mb-2">
+                <label asp-for="UnitPrice" class="control-label"></label>
+                <input asp-for="UnitPrice" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group mb-2">
+                <label asp-for="CostPrice" class="control-label"></label>
+                <input asp-for="CostPrice" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="CostPrice" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group mb-2">
+                <label asp-for="UnitOfMeasure" class="control-label"></label>
+                <input asp-for="UnitOfMeasure" class="form-control" placeholder="e.g., Pcs, Box, Bottle" />
+                <span asp-validation-for="UnitOfMeasure" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+             <div class="form-group mb-2">
+                <label asp-for="ReorderLevel" class="control-label"></label>
+                <input asp-for="ReorderLevel" type="number" class="form-control" />
+                <span asp-validation-for="ReorderLevel" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="SupplierInfo" class="control-label"></label>
+                <input asp-for="SupplierInfo" class="form-control" />
+                <span asp-validation-for="SupplierInfo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="BatchNumber" class="control-label"></label>
+                <input asp-for="BatchNumber" class="form-control" />
+                <span asp-validation-for="BatchNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-2">
+                <label asp-for="ExpiryDate" class="control-label"></label>
+                <input asp-for="ExpiryDate" type="date" class="form-control" />
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <input type="submit" value="Create Item" class="btn btn-success" />
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

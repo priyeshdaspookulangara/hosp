@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UniCareERP.Domain.Entities.Inventory; // Assuming DTOs will be created later
+using UniCareERP.Application.DTOs.Inventory;
 
 namespace UniCareERP.Application.Services.Inventory
 {
     public interface IInventoryService
     {
-        Task<IEnumerable<InventoryItem>> GetAllInventoryItemsAsync(); // Replace with Dto later
-        Task<InventoryItem?> GetInventoryItemByIdAsync(Guid id);       // Replace with Dto later
-        // Add other method signatures (e.g., for Stock Transactions)
+        // Item Master CRUD
+        Task<InventoryItemDto?> CreateItemAsync(CreateInventoryItemDto createDto);
+        Task<InventoryItemDto?> GetItemByIdAsync(Guid itemId);
+        Task<IEnumerable<InventoryItemDto>> GetAllItemsAsync();
+        Task<InventoryItemDto?> UpdateItemAsync(UpdateInventoryItemDto updateDto);
+        Task<bool> DeleteItemAsync(Guid itemId); // Soft delete
+
+        // Stock Management
+        Task<bool> AdjustStockAsync(Guid itemId, int quantityChanged, string reason, string? transactionType = "Adjustment");
     }
 }

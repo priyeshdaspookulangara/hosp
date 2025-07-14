@@ -1,0 +1,116 @@
+@model UniCareERP.Application.DTOs.Inventory.InventoryItemDto
+
+@{
+    ViewData["Title"] = "Item Details";
+}
+
+<h1>@Model.Name <span class="text-muted fs-5">(@Model.ItemCode)</span></h1>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+@if (TempData["WarningMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["WarningMessage"]</div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>Item Information</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Item Code</dt>
+            <dd class="col-sm-8">@Model.ItemCode</dd>
+
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Model.Description</dd>
+
+            <dt class="col-sm-4">Category</dt>
+            <dd class="col-sm-8">@Model.Category</dd>
+
+            <dt class="col-sm-4">Unit of Measure</dt>
+            <dd class="col-sm-8">@Model.UnitOfMeasure</dd>
+
+            <dt class="col-sm-4">Selling Price</dt>
+            <dd class="col-sm-8">@Model.UnitPrice.ToString("C")</dd>
+
+            <dt class="col-sm-4">Cost Price</dt>
+            <dd class="col-sm-8">@Model.CostPrice.ToString("C")</dd>
+
+            <dt class="col-sm-4">Supplier</dt>
+            <dd class="col-sm-8">@Model.SupplierInfo</dd>
+
+            <dt class="col-sm-4">Batch Number</dt>
+            <dd class="col-sm-8">@Model.BatchNumber</dd>
+
+            <dt class="col-sm-4">Expiry Date</dt>
+            <dd class="col-sm-8">@Model.ExpiryDate?.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">
+                 @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactive</span>
+                    }
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <h4>Stock Management</h4>
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Current Stock</h5>
+                <p class="card-text display-4">@Model.QuantityInStock <span class="fs-5 text-muted">@Model.UnitOfMeasure</span></p>
+                <p class="card-text"><strong>Reorder Level:</strong> @Model.ReorderLevel</p>
+                @if (Model.QuantityInStock <= Model.ReorderLevel)
+                {
+                    <div class="alert alert-warning p-2">Stock is at or below reorder level.</div>
+                }
+            </div>
+        </div>
+
+        <div class="card mt-3">
+             <div class="card-header">
+                Adjust Stock Quantity
+             </div>
+            <div class="card-body">
+                 <form asp-action="AdjustStock" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="mb-2">
+                        <label for="quantity" class="form-label">Quantity Change</label>
+                        <input type="number" name="quantity" class="form-control" placeholder="e.g., 50 or -10" required />
+                        <div class="form-text">Use a positive number to add stock, a negative number to remove stock.</div>
+                    </div>
+                     <div class="mb-2">
+                        <label for="reason" class="form-label">Reason</label>
+                        <input type="text" name="reason" class="form-control" placeholder="e.g., Initial stock, Damaged goods" required />
+                    </div>
+                    <button type="submit" class="btn btn-info w-100">Adjust Stock</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Item Details</a>
+    @if (Model.IsActive)
+    {
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to deactivate this item?');">
+            <button type="submit" class="btn btn-danger ms-2">Deactivate Item</button>
+        </form>
+    }
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</div>
