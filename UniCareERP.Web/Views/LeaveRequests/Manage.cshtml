@@ -1,0 +1,78 @@
+@model IEnumerable<UniCareERP.Application.DTOs.HR.LeaveRequestDto>
+
+@{
+    ViewData["Title"] = "Manage Leave Requests";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>The following leave requests are pending approval.</p>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Request Date</th>
+            <th>Leave Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Reason</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EmployeeName (@item.EmployeeCode)</td>
+                <td>@item.RequestedDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.LeaveTypeText</td>
+                <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.Reason</td>
+                <td>
+                    <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                    <button type="button" class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#rejectModal-@item.Id">
+                      Reject
+                    </button>
+
+                    <!-- Reject Modal -->
+                    <div class="modal fade" id="rejectModal-@item.Id" tabindex="-1" aria-labelledby="rejectModalLabel-@item.Id" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <form asp-action="Reject" asp-route-id="@item.Id" method="post">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="rejectModalLabel-@item.Id">Reject Leave Request</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>For: @item.EmployeeName</p>
+                                <div class="mb-3">
+                                  <label for="reason-@item.Id" class="form-label">Reason for Rejection:</label>
+                                  <textarea id="reason-@item.Id" name="reason" class="form-control" required></textarea>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Submit Rejection</button>
+                              </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

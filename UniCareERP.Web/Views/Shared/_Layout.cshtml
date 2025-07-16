@@ -43,7 +43,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Invoices" asp-action="Index">Finance</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">HR</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequests" asp-action="Index">My Leave</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="hrMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                HR
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="hrMenuDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Index">Employee Management</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="LeaveRequests" asp-action="Manage">Manage Leave Requests</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="inventoryMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
