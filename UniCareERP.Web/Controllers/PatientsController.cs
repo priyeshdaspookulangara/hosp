@@ -5,7 +5,8 @@ using UniCareERP.Application.DTOs.Patients;
 using System;
 using System.Threading.Tasks;
 using UniCareERP.Application.Services.Appointments;
-using UniCareERP.Application.Services.Finance; // Added for IInvoiceService
+using UniCareERP.Application.Services.Finance;
+using UniCareERP.Application.Services.Patients; // Added for IPrescriptionService
 
 
 namespace UniCareERP.Web.Controllers
@@ -15,18 +16,21 @@ namespace UniCareERP.Web.Controllers
     {
         private readonly IPatientService _patientService;
         private readonly IAppointmentService _appointmentService;
-        private readonly IInvoiceService _invoiceService; // Added
+        private readonly IInvoiceService _invoiceService;
+        private readonly IPrescriptionService _prescriptionService; // Added
         private readonly ILogger<PatientsController> _logger;
 
         public PatientsController(
             IPatientService patientService,
             IAppointmentService appointmentService,
-            IInvoiceService invoiceService, // Added
+            IInvoiceService invoiceService,
+            IPrescriptionService prescriptionService, // Added
             ILogger<PatientsController> logger)
         {
             _patientService = patientService;
             _appointmentService = appointmentService;
-            _invoiceService = invoiceService; // Added
+            _invoiceService = invoiceService;
+            _prescriptionService = prescriptionService; // Added
             _logger = logger;
         }
 
@@ -86,6 +90,9 @@ namespace UniCareERP.Web.Controllers
 
             // Fetch invoices for this patient
             ViewBag.PatientInvoices = await _invoiceService.GetInvoicesForPatientAsync(id.Value);
+
+            // Fetch prescriptions for this patient
+            ViewBag.PatientPrescriptions = await _prescriptionService.GetPrescriptionsForPatientAsync(id.Value);
 
             return View(patient);
         }

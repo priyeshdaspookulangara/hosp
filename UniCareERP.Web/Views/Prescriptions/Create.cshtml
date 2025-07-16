@@ -1,0 +1,108 @@
+@model UniCareERP.Application.DTOs.Patients.CreatePrescriptionDto
+
+@{
+    ViewData["Title"] = "Write New Prescription";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>For Patient: @ViewBag.PatientName (@ViewBag.PatientCode)</h4>
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <input type="hidden" asp-for="PatientId" />
+    <input type="hidden" asp-for="SourceAppointmentId" />
+
+    <div class="row g-2 align-items-center mb-2">
+         <div class="col-auto">
+            <label for="item-search" class="col-form-label">Search for Drug:</label>
+         </div>
+         <div class="col">
+            <input type="text" id="item-search" class="form-control" placeholder="Type drug name or code..." />
+         </div>
+    </div>
+
+    <h5 class="mt-4">Prescribed Items</h5>
+    <hr />
+
+    <div id="prescription-items-container">
+        @* Items will be added here by JavaScript *@
+    </div>
+
+    <div class="form-group mt-4">
+        <input type="submit" value="Save Prescription" class="btn btn-success" />
+        <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.min.css" />
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $(function () {
+            const container = $('#prescription-items-container');
+            let itemIndex = 0;
+
+            $("#item-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Url.Action("SearchInventoryItems", "Sales")", // Re-using the search from Sales/POS
+                        data: { term: request.term },
+                        success: function (data) {
+                            // Optional: filter for 'Medicine' category if available
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    addItemToPrescription(ui.item);
+                    this.value = "";
+                    return false;
+                }
+            });
+
+            function addItemToPrescription(item) {
+                const itemHtml = `
+                    <div class="card mb-2 prescription-item-row">
+                        <div class="card-body">
+                            <input type="hidden" name="Items[${itemIndex}].InventoryItemId" value="${item.id}" />
+                            <div class="d-flex justify-content-between">
+                                <h6 class="card-title">${item.label.split('-')[0]}</h6>
+                                <button type="button" class="btn-close remove-item-btn" aria-label="Close"></button>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Dosage</label>
+                                    <input type="text" name="Items[${itemIndex}].Dosage" class="form-control" placeholder="e.g., 500mg" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Frequency</label>
+                                    <input type="text" name="Items[${itemIndex}].Frequency" class="form-control" placeholder="e.g., Twice a day" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Duration</label>
+                                    <input type="text" name="Items[${itemIndex}].Duration" class="form-control" placeholder="e.g., For 7 days" required />
+                                </div>
+                            </div>
+                             <div class="mt-2">
+                                <label class="form-label">Notes</label>
+                                <textarea name="Items[${itemIndex}].Notes" class="form-control" rows="1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(itemHtml);
+                itemIndex++;
+            }
+
+            container.on('click', '.remove-item-btn', function () {
+                $(this).closest('.prescription-item-row').remove();
+            });
+        });
+    </script>
+}

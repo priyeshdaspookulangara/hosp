@@ -1,0 +1,55 @@
+@model UniCareERP.Application.DTOs.Patients.PrescriptionDto
+
+@{
+    ViewData["Title"] = "Prescription Details";
+}
+
+<div class="container mt-4 mb-4 p-3">
+    <div class="row">
+        <div class="col-6">
+            <h3>Prescription</h3>
+            <p><strong>Prescribing Doctor:</strong> @Model.DoctorName</p>
+            <p><strong>Date:</strong> @Model.PrescriptionDate.ToString("MMMM dd, yyyy")</p>
+        </div>
+        <div class="col-6 text-end">
+             <strong>Patient:</strong>
+            <p>
+                <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId">@Model.PatientName</a>
+            </p>
+            <p><strong>Status:</strong> <span class="badge fs-6 bg-info">@Model.StatusText</span></p>
+        </div>
+    </div>
+    <hr>
+
+    <div class="table-responsive mt-4">
+        <table class="table">
+            <thead class="bg-light">
+                <tr>
+                    <th>Drug/Item</th>
+                    <th>Dosage</th>
+                    <th>Frequency</th>
+                    <th>Duration</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.ItemName</td>
+                        <td>@item.Dosage</td>
+                        <td>@item.Frequency</td>
+                        <td>@item.Duration</td>
+                        <td>@item.Notes</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-4 d-print-none">
+        <div class="col-12">
+            <a asp-controller="Patients" asp-action="Details" asp-route-id="@Model.PatientId" class="btn btn-secondary">Back to Patient Details</a>
+        </div>
+    </div>
+</div>

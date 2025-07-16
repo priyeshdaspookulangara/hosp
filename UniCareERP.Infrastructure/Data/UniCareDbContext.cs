@@ -19,6 +19,8 @@ namespace UniCareERP.Infrastructure.Data
         // Patient & Clinical Management
         public DbSet<Patient> Patients { get; set; } = null!;
         public DbSet<Appointment> Appointments { get; set; } = null!;
+        public DbSet<Prescription> Prescriptions { get; set; } = null!;
+        public DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
 
         // Finance Management
         public DbSet<Invoice> Invoices { get; set; } = null!;
