@@ -88,17 +88,39 @@
             <h5>Actions</h5>
             <hr/>
             <div class="d-flex flex-wrap gap-2">
-                 @if (Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Paid && Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Void)
-                 {
-                    <form asp-action="AddPayment" method="post">
-                        <input type="hidden" name="id" value="@Model.Id" />
-                        <div class="input-group">
-                             <span class="input-group-text">$</span>
-                            <input type="number" name="amount" class="form-control" placeholder="Payment Amount" step="0.01" required min="0.01" />
-                            <button type="submit" class="btn btn-success">Add Payment</button>
+                @if (Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Paid && Model.Status != UniCareERP.Domain.Enums.InvoiceStatus.Void)
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Record a Payment</h5>
+                            <form asp-action="AddPayment" method="post">
+                                <input type="hidden" name="InvoiceId" value="@Model.Id" />
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label for="Amount" class="form-label">Amount</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" name="Amount" class="form-control" placeholder="Payment Amount" step="0.01" required min="0.01" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label for="PaymentMethod" class="form-label">Payment Method</label>
+                                        <select name="PaymentMethod" class="form-select" asp-items="Html.GetEnumSelectList<UniCareERP.Domain.Enums.PaymentMethod>()"></select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label for="TransactionId" class="form-label">Transaction ID (Optional)</label>
+                                        <input type="text" name="TransactionId" class="form-control" />
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="Notes" class="form-label">Notes (Optional)</label>
+                                        <textarea name="Notes" class="form-control" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Add Payment</button>
+                            </form>
                         </div>
-                    </form>
-                 }
+                    </div>
+                }
 
                 @if (Model.Status == UniCareERP.Domain.Enums.InvoiceStatus.Draft)
                 {

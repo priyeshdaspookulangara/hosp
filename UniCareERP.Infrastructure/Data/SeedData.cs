@@ -11,7 +11,7 @@ namespace UniCareERP.Infrastructure.Data
 {
     public static class SeedData
     {
-        public static async TaskInitialize(IServiceProvider serviceProvider, ILogger<SeedData> logger)
+        public static async Task Initialize(IServiceProvider serviceProvider, ILogger logger)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();

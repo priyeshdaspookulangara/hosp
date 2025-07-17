@@ -1,0 +1,13 @@
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.AssemblyInfoInputs.cache
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.AssemblyInfo.cs
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.csproj.CoreCompileInputs.cache
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.sourcelink.json
+/app/UniCareERP.Domain/bin/Debug/net8.0/UniCareERP.Domain.deps.json
+/app/UniCareERP.Domain/bin/Debug/net8.0/UniCareERP.Domain.dll
+/app/UniCareERP.Domain/bin/Debug/net8.0/UniCareERP.Domain.pdb
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.csproj.AssemblyReference.cache
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.dll
+/app/UniCareERP.Domain/obj/Debug/net8.0/refint/UniCareERP.Domain.dll
+/app/UniCareERP.Domain/obj/Debug/net8.0/UniCareERP.Domain.pdb
+/app/UniCareERP.Domain/obj/Debug/net8.0/ref/UniCareERP.Domain.dll

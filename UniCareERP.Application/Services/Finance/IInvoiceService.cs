@@ -13,6 +13,6 @@ namespace UniCareERP.Application.Services.Finance
         Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync();
         Task<IEnumerable<InvoiceDto>> GetInvoicesForPatientAsync(Guid patientId);
         Task<bool> UpdateInvoiceStatusAsync(Guid invoiceId, InvoiceStatus newStatus);
-        Task<InvoiceDto?> AddPaymentToInvoiceAsync(Guid invoiceId, decimal paymentAmount, DateTime paymentDate); // Added paymentDate
+        Task<InvoiceDto?> AddPaymentToInvoiceAsync(Guid invoiceId, decimal paymentAmount, DateTime paymentDate, PaymentMethod paymentMethod, string transactionId = null, string notes = null);
     }
 }

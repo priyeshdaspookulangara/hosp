@@ -15,12 +15,20 @@ namespace UniCareERP.Application.Services.Finance
     {
         private readonly UniCareDbContext _context;
         private readonly ILogger<InvoiceService> _logger;
+        private readonly IPaymentService _paymentService;
+        private readonly IGeneralLedgerService _generalLedgerService;
         private const string InvoiceNumberPrefix = "INV-";
 
-        public InvoiceService(UniCareDbContext context, ILogger<InvoiceService> logger)
+        public InvoiceService(
+            UniCareDbContext context,
+            ILogger<InvoiceService> logger,
+            IPaymentService paymentService,
+            IGeneralLedgerService generalLedgerService)
         {
             _context = context;
             _logger = logger;
+            _paymentService = paymentService;
+            _generalLedgerService = generalLedgerService;
         }
 
         public async Task<string> GenerateNextInvoiceNumberAsync()
@@ -151,7 +159,7 @@ namespace UniCareERP.Application.Services.Finance
             }
         }
 
-        public async Task<InvoiceDto?> AddPaymentToInvoiceAsync(Guid invoiceId, decimal paymentAmount, DateTime paymentDate)
+        public async Task<InvoiceDto?> AddPaymentToInvoiceAsync(Guid invoiceId, decimal paymentAmount, DateTime paymentDate, PaymentMethod paymentMethod, string transactionId = null, string notes = null)
         {
             var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice == null)
@@ -163,11 +171,27 @@ namespace UniCareERP.Application.Services.Finance
             if (paymentAmount <= 0)
             {
                 _logger.LogWarning($"Invalid payment amount {paymentAmount} for invoice {invoice.InvoiceNumber}.");
-                return null; // Or throw argument exception
+                return null;
+            }
+
+            var paymentDto = new PaymentDto
+            {
+                InvoiceId = invoiceId,
+                Amount = paymentAmount,
+                PaymentDate = paymentDate,
+                PaymentMethod = paymentMethod,
+                TransactionId = transactionId,
+                Notes = notes
+            };
+
+            var recordedPayment = await _paymentService.RecordPaymentAsync(paymentDto);
+            if (recordedPayment == null)
+            {
+                _logger.LogError($"Failed to record payment for invoice {invoice.InvoiceNumber}.");
+                return null;
             }
 
             invoice.AmountPaid += paymentAmount;
-
             if (invoice.AmountPaid >= invoice.TotalAmount)
             {
                 invoice.Status = InvoiceStatus.Paid;
@@ -177,16 +201,13 @@ namespace UniCareERP.Application.Services.Finance
                 invoice.Status = InvoiceStatus.PartiallyPaid;
             }
 
-            // In a real system, you would also create a PaymentTransaction record here.
-            // For now, just updating the invoice is sufficient as per the plan.
-
             try
             {
                 await _context.SaveChangesAsync();
-                 _logger.LogInformation($"Payment of {paymentAmount} added to invoice {invoice.InvoiceNumber}. New status: {invoice.Status}.");
+                _logger.LogInformation($"Payment of {paymentAmount} added to invoice {invoice.InvoiceNumber}. New status: {invoice.Status}.");
                 return await GetInvoiceByIdAsync(invoiceId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error adding payment to invoice {invoice.InvoiceNumber}.");
                 return null;
