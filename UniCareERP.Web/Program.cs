@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UniCareERP.Domain.Entities;
 using UniCareERP.Infrastructure.Data;
+using UniCareERP.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection; // Required for CreateScope
 using Microsoft.Extensions.Logging; // Required for ILogger
 
