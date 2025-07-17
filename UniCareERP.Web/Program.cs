@@ -31,12 +31,19 @@ builder.Services.AddScoped<UniCareERP.Application.Services.IRoleService, UniCare
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPatientService, UniCareERP.Application.Services.Patients.PatientService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Appointments.IAppointmentService, UniCareERP.Application.Services.Appointments.AppointmentService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IInvoiceService, UniCareERP.Application.Services.Finance.InvoiceService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IPaymentService, UniCareERP.Application.Services.Finance.PaymentService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Inventory.IInventoryService, UniCareERP.Application.Services.Inventory.InventoryService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Inventory.ISaleService, UniCareERP.Application.Services.Inventory.SaleService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.IEmployeeService, UniCareERP.Application.Services.HR.EmployeeService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.ILeaveRequestService, UniCareERP.Application.Services.HR.LeaveRequestService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPrescriptionService, UniCareERP.Application.Services.Patients.PrescriptionService>(); // Added PrescriptionService
 builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardService, UniCareERP.Application.Services.Dashboard.DashboardService>();
+
+// Register Radiology services
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IImagingService, UniCareERP.Application.Services.Radiology.ImagingService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IImagingTestService, UniCareERP.Application.Services.Radiology.ImagingTestService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IRadiologyReportService, UniCareERP.Application.Services.Radiology.RadiologyReportService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IWorklistItemService, UniCareERP.Application.Services.Radiology.WorklistItemService>();
 
 builder.Services.AddControllersWithViews();
 
