@@ -38,6 +38,12 @@ builder.Services.AddScoped<UniCareERP.Application.Services.HR.ILeaveRequestServi
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPrescriptionService, UniCareERP.Application.Services.Patients.PrescriptionService>(); // Added PrescriptionService
 builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardService, UniCareERP.Application.Services.Dashboard.DashboardService>();
 
+// Register Radiology services
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IImagingService, UniCareERP.Application.Services.Radiology.ImagingService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IImagingTestService, UniCareERP.Application.Services.Radiology.ImagingTestService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IRadiologyReportService, UniCareERP.Application.Services.Radiology.RadiologyReportService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Radiology.IWorklistItemService, UniCareERP.Application.Services.Radiology.WorklistItemService>();
+
 builder.Services.AddControllersWithViews();
 
 // Configure application cookie settings (important for login/logout behavior)

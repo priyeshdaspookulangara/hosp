@@ -21,6 +21,10 @@ namespace UniCareERP.Infrastructure.Data
         public DbSet<Appointment> Appointments { get; set; } = null!;
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
+        public DbSet<ImagingService> ImagingServices { get; set; }
+        public DbSet<ImagingTest> ImagingTests { get; set; }
+        public DbSet<RadiologyReport> RadiologyReports { get; set; }
+        public DbSet<WorklistItem> WorklistItems { get; set; }
 
         // Finance Management
         public DbSet<Invoice> Invoices { get; set; } = null!;

@@ -1,0 +1,47 @@
+@model IEnumerable<UniCareERP.Domain.Entities.Radiology.RadiologyReport>
+
+@{
+    ViewData["Title"] = "Radiology Reports";
+}
+
+<h1>Radiology Reports</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagingTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Radiologist)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReportDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagingTest.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Radiologist.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
