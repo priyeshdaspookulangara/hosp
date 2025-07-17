@@ -305,13 +305,4 @@ namespace UniCareERP.Application.Tests.Services
         }
     }
 
-    // Copied from PatientServiceTests - consider moving to a shared test utilities project
-    public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
-    {
-        private readonly IEnumerator<T> _enumerator;
-        public T Current => _enumerator.Current;
-        public TestAsyncEnumerator(IEnumerator<T> enumerator) => _enumerator = enumerator;
-        public ValueTask DisposeAsync() => new ValueTask(Task.CompletedTask);
-        public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(_enumerator.MoveNext());
-    }
 }

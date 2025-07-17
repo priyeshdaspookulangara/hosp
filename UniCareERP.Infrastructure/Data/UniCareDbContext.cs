@@ -24,7 +24,10 @@ namespace UniCareERP.Infrastructure.Data
 
         // Finance Management
         public DbSet<Invoice> Invoices { get; set; } = null!;
+        public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
+        public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<GeneralLedgerAccount> GeneralLedgerAccounts { get; set; } = null!;
+        public DbSet<GeneralLedgerTransaction> GeneralLedgerTransactions { get; set; } = null!;
 
         // HR Management
         public DbSet<Employee> Employees { get; set; } = null!;
@@ -32,6 +35,10 @@ namespace UniCareERP.Infrastructure.Data
 
         // Inventory Management
         public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; } = null!;
+        public DbSet<Sale> Sales { get; set; } = null!;
+        public DbSet<SaleItem> SaleItems { get; set; } = null!;
         public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
 
 

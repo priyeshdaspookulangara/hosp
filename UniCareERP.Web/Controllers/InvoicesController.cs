@@ -8,6 +8,7 @@ using UniCareERP.Application.DTOs.Finance;
 using UniCareERP.Application.Services.Finance;
 using UniCareERP.Application.Services.Patients;
 using UniCareERP.Domain.Enums;
+using UniCareERP.Web.ViewModels.Finance;
 
 namespace UniCareERP.Web.Controllers
 {
@@ -105,27 +106,34 @@ namespace UniCareERP.Web.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        // POST: Invoices/AddPayment/5
+        // POST: Invoices/AddPayment
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPayment(Guid id, decimal amount)
+        public async Task<IActionResult> AddPayment(AddPaymentViewModel model)
         {
-            if (amount <= 0)
+            if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Payment amount must be positive.";
-                return RedirectToAction(nameof(Details), new { id });
+                TempData["ErrorMessage"] = "Invalid payment details.";
+                return RedirectToAction(nameof(Details), new { id = model.InvoiceId });
             }
 
-            var updatedInvoice = await _invoiceService.AddPaymentToInvoiceAsync(id, amount, DateTime.UtcNow);
-            if(updatedInvoice != null)
+            var updatedInvoice = await _invoiceService.AddPaymentToInvoiceAsync(
+                model.InvoiceId,
+                model.Amount,
+                DateTime.UtcNow,
+                model.PaymentMethod,
+                model.TransactionId,
+                model.Notes);
+
+            if (updatedInvoice != null)
             {
-                TempData["SuccessMessage"] = $"Payment of {amount:C} successfully added.";
+                TempData["SuccessMessage"] = $"Payment of {model.Amount:C} successfully added.";
             }
             else
             {
-                 TempData["ErrorMessage"] = "Failed to add payment.";
+                TempData["ErrorMessage"] = "Failed to add payment.";
             }
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Details), new { id = model.InvoiceId });
         }
 
 

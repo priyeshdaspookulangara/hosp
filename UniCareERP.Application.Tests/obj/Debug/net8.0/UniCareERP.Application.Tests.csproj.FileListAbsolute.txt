@@ -1,0 +1,6 @@
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.csproj.AssemblyReference.cache
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.AssemblyInfoInputs.cache
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.AssemblyInfo.cs
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.csproj.CoreCompileInputs.cache
+/app/UniCareERP.Application.Tests/obj/Debug/net8.0/UniCareERP.Application.Tests.sourcelink.json

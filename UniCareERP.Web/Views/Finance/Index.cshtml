@@ -1,13 +1,76 @@
+@model UniCareERP.Application.DTOs.Finance.FinanceDashboardDto
+
 @{
-    ViewData["Title"] = "Finance";
+    ViewData["Title"] = "Finance Dashboard";
 }
 
 <h1>@ViewData["Title"]</h1>
+<hr />
 
-<p>@ViewBag.Message</p>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total Revenue</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalRevenue.ToString("C")</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Total Expenses</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalExpenses.ToString("C")</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Accounts Receivable</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalAccountsReceivable.ToString("C")</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Accounts Payable</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalAccountsPayable.ToString("C")</h5>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div class="alert alert-info" role="alert">
-    This is a placeholder page for Finance Management. Full functionality will be implemented later.
-    <br />
-    Planned features: General Ledger, Accounts Payable/Receivable, Billing, Payroll integration.
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h4>Recent Invoices</h4>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Patient</th>
+                    <th>Invoice Date</th>
+                    <th>Due Date</th>
+                    <th>Total Amount</th>
+                    <th>Amount Due</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var invoice in Model.RecentInvoices)
+                {
+                    <tr>
+                        <td><a asp-controller="Invoices" asp-action="Details" asp-route-id="@invoice.Id">@invoice.InvoiceNumber</a></td>
+                        <td>@invoice.PatientName</td>
+                        <td>@invoice.InvoiceDate.ToString("yyyy-MM-dd")</td>
+                        <td>@invoice.DueDate.ToString("yyyy-MM-dd")</td>
+                        <td>@invoice.TotalAmount.ToString("C")</td>
+                        <td>@invoice.AmountDue.ToString("C")</td>
+                        <td>@invoice.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
