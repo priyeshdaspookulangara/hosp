@@ -1,0 +1,47 @@
+@model IEnumerable<UniCareERP.Application.DTOs.Lab.TestRequestDto>
+
+@{
+    ViewData["Title"] = "Test Requests";
+}
+
+<h1>Test Requests</h1>
+
+<p>
+    <a asp-action="CreateTestRequest">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequestDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoctorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestDate)
+            </td>
+            <td>
+                <a asp-action="EditTestRequest" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="TestRequestDetails" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="DeleteTestRequest" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

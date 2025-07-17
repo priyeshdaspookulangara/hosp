@@ -34,35 +34,6 @@ namespace UniCareERP.Web.Controllers
             _logger = logger;
         }
 
-        // GET: Patients
-        public async Task<IActionResult> Index()
-        {
-            var patients = await _patientService.GetAllPatientsAsync();
-            return View(patients);
-        }
-
-using UniCareERP.Application.Services.Appointments; // Added for IAppointmentService
-
-// ... other using statements ...
-
-namespace UniCareERP.Web.Controllers
-{
-    [Authorize]
-    public class PatientsController : Controller
-    {
-        private readonly IPatientService _patientService;
-        private readonly IAppointmentService _appointmentService; // Added
-        private readonly ILogger<PatientsController> _logger;
-
-        public PatientsController(
-            IPatientService patientService,
-            IAppointmentService appointmentService, // Added
-            ILogger<PatientsController> logger)
-        {
-            _patientService = patientService;
-            _appointmentService = appointmentService; // Added
-            _logger = logger;
-        }
 
         // GET: Patients
         public async Task<IActionResult> Index()

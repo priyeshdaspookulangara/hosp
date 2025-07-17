@@ -6,6 +6,7 @@ using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Finance;
 using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Domain.Entities.Inventory;
+using UniCareERP.Domain.Entities.Lab;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -40,6 +41,12 @@ namespace UniCareERP.Infrastructure.Data
         public DbSet<Sale> Sales { get; set; } = null!;
         public DbSet<SaleItem> SaleItems { get; set; } = null!;
         public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
+
+        // Laboratory Management
+        public DbSet<LabTest> LabTests { get; set; } = null!;
+        public DbSet<TestRequest> TestRequests { get; set; } = null!;
+        public DbSet<Sample> Samples { get; set; } = null!;
+        public DbSet<TestResult> TestResults { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

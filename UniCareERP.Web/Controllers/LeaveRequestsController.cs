@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using UniCareERP.Application.DTOs.HR;
 using UniCareERP.Application.Services.HR;
 using UniCareERP.Domain.Entities; // For ApplicationUser
+using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Infrastructure.Data; // For UniCareDbContext to find Employee from UserId
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace UniCareERP.Web.Controllers
 {

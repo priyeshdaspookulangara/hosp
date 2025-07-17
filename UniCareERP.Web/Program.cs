@@ -5,6 +5,8 @@ using UniCareERP.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection; // Required for CreateScope
 using Microsoft.Extensions.Logging; // Required for ILogger
 
+var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
 
 // Configure DbContext
@@ -37,6 +39,9 @@ builder.Services.AddScoped<UniCareERP.Application.Services.HR.IEmployeeService, 
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.ILeaveRequestService, UniCareERP.Application.Services.HR.LeaveRequestService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPrescriptionService, UniCareERP.Application.Services.Patients.PrescriptionService>(); // Added PrescriptionService
 builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardService, UniCareERP.Application.Services.Dashboard.DashboardService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Lab.ILabTestService, UniCareERP.Application.Services.Lab.LabTestService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Lab.ITestRequestService, UniCareERP.Application.Services.Lab.TestRequestService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Lab.ITestResultService, UniCareERP.Application.Services.Lab.TestResultService>();
 
 builder.Services.AddControllersWithViews();
 
@@ -76,8 +81,9 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var seedDataLogger = services.GetRequiredService<ILogger<SeedData>>();
-    var appLogger = services.GetRequiredService<ILogger<Program>>(); // For general app logging if needed elsewhere
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    var seedDataLogger = loggerFactory.CreateLogger("SeedData");
+    var appLogger = loggerFactory.CreateLogger<Program>();
     try
     {
         // Ensure database is created.

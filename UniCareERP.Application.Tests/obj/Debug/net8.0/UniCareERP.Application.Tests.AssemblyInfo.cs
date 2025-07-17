@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UniCareERP.Application.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8da7216ebda5905f4a56f553c145a878ee6d9589")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c8df28073ad2144b7fe1166861ae93031059160")]
 [assembly: System.Reflection.AssemblyProductAttribute("UniCareERP.Application.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UniCareERP.Application.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

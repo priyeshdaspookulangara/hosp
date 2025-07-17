@@ -1,0 +1,9 @@
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.csproj.AssemblyReference.cache
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.GeneratedMSBuildEditorConfig.editorconfig
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.AssemblyInfoInputs.cache
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.AssemblyInfo.cs
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.csproj.CoreCompileInputs.cache
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.MvcApplicationPartsAssemblyInfo.cache
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.RazorAssemblyInfo.cache
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.RazorAssemblyInfo.cs
+/app/UniCareERP.Web/obj/Debug/net8.0/UniCareERP.Web.sourcelink.json
