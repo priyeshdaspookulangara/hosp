@@ -7,6 +7,7 @@ using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Procedures;
+using UniCareERP.Domain.Entities.Lab;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -18,38 +19,42 @@ namespace UniCareERP.Infrastructure.Data
         }
 
         // Patient & Clinical Management
-        public DbSet<Patient> Patients { get; set; } = null!;
-        public DbSet<Appointment> Appointments { get; set; } = null!;
-        public DbSet<Prescription> Prescriptions { get; set; } = null!;
-        public DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
-        public DbSet<Procedure> Procedures { get; set; } = null!;
-        public DbSet<ProcedureCharge> ProcedureCharges { get; set; } = null!;
+        public virtual DbSet<Patient> Patients { get; set; } = null!;
+        public virtual DbSet<Appointment> Appointments { get; set; } = null!;
+        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
+        public virtual DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
+        public virtual DbSet<Procedure> Procedures { get; set; } = null!;
+        public virtual DbSet<ProcedureCharge> ProcedureCharges { get; set; } = null!;
 
         // Finance Management
-        public DbSet<Invoice> Invoices { get; set; } = null!;
-        public DbSet<GeneralLedgerAccount> GeneralLedgerAccounts { get; set; } = null!;
-        public DbSet<PatientPayment> PatientPayments { get; set; } = null!;
-        public DbSet<PatientRefund> PatientRefunds { get; set; } = null!;
-        public DbSet<PatientAccount> PatientAccounts { get; set; } = null!;
+        public virtual DbSet<Invoice> Invoices { get; set; } = null!;
+        public virtual DbSet<GeneralLedgerAccount> GeneralLedgerAccounts { get; set; } = null!;
+        public virtual DbSet<PatientPayment> PatientPayments { get; set; } = null!;
+        public virtual DbSet<PatientRefund> PatientRefunds { get; set; } = null!;
+        public virtual DbSet<PatientAccount> PatientAccounts { get; set; } = null!;
 
         // HR Management
-        public DbSet<Employee> Employees { get; set; } = null!;
-        public DbSet<LeaveRequest> LeaveRequests { get; set; } = null!;
-        public DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
-        public DbSet<Payroll> Payrolls { get; set; } = null!;
-        public DbSet<Payslip> Payslips { get; set; } = null!;
-        public DbSet<SalaryStructure> SalaryStructures { get; set; } = null!;
+        public virtual DbSet<Employee> Employees { get; set; } = null!;
+        public virtual DbSet<LeaveRequest> LeaveRequests { get; set; } = null!;
+        public virtual DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
+        public virtual DbSet<Payroll> Payrolls { get; set; } = null!;
+        public virtual DbSet<Payslip> Payslips { get; set; } = null!;
+        public virtual DbSet<SalaryStructure> SalaryStructures { get; set; } = null!;
 
         // Inventory Management
-        public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
-        public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
-        public DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
-        public DbSet<Sale> Sales { get; set; } = null!;
+        public virtual DbSet<InventoryItem> InventoryItems { get; set; } = null!;
+        public virtual DbSet<StockTransaction> StockTransactions { get; set; } = null!;
+        public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
+        public virtual DbSet<Sale> Sales { get; set; } = null!;
 
         // Pharmacy Management
-        public DbSet<UniCareERP.Domain.Entities.Pharmacy.Drug> Drugs { get; set; } = null!;
-        public DbSet<UniCareERP.Domain.Entities.Pharmacy.Prescription> PharmacyPrescriptions { get; set; } = null!;
-        public DbSet<UniCareERP.Domain.Entities.Pharmacy.PrescriptionItem> PharmacyPrescriptionItems { get; set; } = null!;
+        public virtual DbSet<UniCareERP.Domain.Entities.Pharmacy.Drug> Drugs { get; set; } = null!;
+        public virtual DbSet<UniCareERP.Domain.Entities.Pharmacy.Prescription> PharmacyPrescriptions { get; set; } = null!;
+        public virtual DbSet<UniCareERP.Domain.Entities.Pharmacy.PrescriptionItem> PharmacyPrescriptionItems { get; set; } = null!;
+
+        // Laboratory Management
+        public virtual DbSet<LabTest> LabTests { get; set; } = null!;
+        public virtual DbSet<LabOrder> LabOrders { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

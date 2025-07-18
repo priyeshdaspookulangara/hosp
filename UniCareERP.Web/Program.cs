@@ -44,6 +44,7 @@ builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardS
 builder.Services.AddScoped<UniCareERP.Application.Services.Pharmacy.IPharmacyService, UniCareERP.Application.Services.Pharmacy.PharmacyService>();
 builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IDrugRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.DrugRepository>();
 builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IPrescriptionRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.PrescriptionRepository>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Lab.ILabService, UniCareERP.Application.Services.Lab.LabService>();
 
 builder.Services.AddControllersWithViews();
 

@@ -9,8 +9,6 @@ using UniCareERP.Application.Services.Patients;
 using UniCareERP.Application.DTOs.Appointments;
 using UniCareERP.Application.DTOs.Finance;
 using UniCareERP.Application.DTOs.Patients;
-using UniCareERP.Domain.Entities.Users;
-using UniCareERP.Domain.Interfaces;
 
 namespace UniCareERP.Application.Services.PatientDashboard
 {
@@ -52,7 +50,7 @@ namespace UniCareERP.Application.Services.PatientDashboard
                 {
                     Id = a.Id,
                     AppointmentDateTime = a.AppointmentDateTime,
-                    DoctorName = a.Doctor.FirstName,
+                    DoctorName = a.DoctorName,
                     ServiceType = a.ServiceType,
                     Status = a.Status
                 }),
@@ -69,7 +67,7 @@ namespace UniCareERP.Application.Services.PatientDashboard
                 {
                     Id = p.Id,
                     PrescriptionDate = p.PrescriptionDate,
-                    DoctorName = p.Doctor.FirstName,
+                    DoctorName = p.DoctorName,
                     Status = p.Status,
                     NumberOfItems = p.Items.Count()
                 })

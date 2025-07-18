@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UniCareERP.Application.Services.Appointments;
 using UniCareERP.Application.Services.Finance;
 using UniCareERP.Application.Services.Patients; // Added for IPrescriptionService
+using UniCareERP.Application.Services.Lab;
 
 
 namespace UniCareERP.Web.Controllers
@@ -18,6 +19,7 @@ namespace UniCareERP.Web.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IInvoiceService _invoiceService;
         private readonly IPrescriptionService _prescriptionService; // Added
+        private readonly ILabService _labService;
         private readonly ILogger<PatientsController> _logger;
 
         public PatientsController(
@@ -25,12 +27,14 @@ namespace UniCareERP.Web.Controllers
             IAppointmentService appointmentService,
             IInvoiceService invoiceService,
             IPrescriptionService prescriptionService, // Added
+            ILabService labService,
             ILogger<PatientsController> logger)
         {
             _patientService = patientService;
             _appointmentService = appointmentService;
             _invoiceService = invoiceService;
             _prescriptionService = prescriptionService; // Added
+            _labService = labService;
             _logger = logger;
         }
 
@@ -63,6 +67,9 @@ namespace UniCareERP.Web.Controllers
 
             // Fetch prescriptions for this patient
             ViewBag.PatientPrescriptions = await _prescriptionService.GetPrescriptionsForPatientAsync(id.Value);
+
+            // Fetch lab orders for this patient
+            ViewBag.PatientLabOrders = await _labService.GetLabOrdersByPatientIdAsync(id.Value);
 
             return View(patient);
         }

@@ -54,7 +54,7 @@ namespace UniCareERP.Application.Tests.Services
             _mockContext.Setup(c => c.Database.BeginTransactionAsync(It.IsAny<CancellationToken>()))
                         .ReturnsAsync(mockTransaction.Object);
 
-            _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            _mockContext.Setup(c => c.SaveChangesAsync(default)).ReturnsAsync(1);
 
             _employeeService = new EmployeeService(_mockContext.Object, _mockUserManager.Object, _mockLogger.Object);
         }
@@ -100,7 +100,7 @@ namespace UniCareERP.Application.Tests.Services
             _mockUserManager.Verify(um => um.CreateAsync(It.IsAny<ApplicationUser>(), createDto.Password), Times.Once);
             _mockUserManager.Verify(um => um.AddToRolesAsync(It.IsAny<ApplicationUser>(), createDto.Roles), Times.Once);
             _mockEmployeeDbSet.Verify(db => db.Add(It.IsAny<Employee>()), Times.Once);
-            _mockContext.Verify(c => c.SaveChangesAsync(), Times.Once); // Called once by EmployeeService
+            _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once); // Called once by EmployeeService
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace UniCareERP.Application.Tests.Services
             Assert.IsTrue(result);
             Assert.IsFalse(employee.IsActive);
             Assert.IsFalse(user.IsActive);
-            _mockContext.Verify(c => c.SaveChangesAsync(), Times.Once);
+            _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
         }
     }
 }

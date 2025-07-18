@@ -10,6 +10,7 @@ using UniCareERP.Application.DTOs.Patients;
 using UniCareERP.Application.Services.Patients;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Infrastructure.Data;
+using UniCareERP.Application.Tests.Helpers;
 
 namespace UniCareERP.Application.Tests.Services
 {
@@ -234,13 +235,4 @@ namespace UniCareERP.Application.Tests.Services
         }
     }
 
-    // Helper class for mocking IAsyncEnumerable for EF Core operations like ToListAsync, FirstOrDefaultAsync
-    public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
-    {
-        private readonly IEnumerator<T> _enumerator;
-        public T Current => _enumerator.Current;
-        public TestAsyncEnumerator(IEnumerator<T> enumerator) => _enumerator = enumerator;
-        public ValueTask DisposeAsync() => new ValueTask(Task.CompletedTask);
-        public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(_enumerator.MoveNext());
-    }
 }
