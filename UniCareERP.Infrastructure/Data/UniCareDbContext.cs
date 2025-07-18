@@ -28,6 +28,9 @@ namespace UniCareERP.Infrastructure.Data
         // Finance Management
         public DbSet<Invoice> Invoices { get; set; } = null!;
         public DbSet<GeneralLedgerAccount> GeneralLedgerAccounts { get; set; } = null!;
+        public DbSet<PatientPayment> PatientPayments { get; set; } = null!;
+        public DbSet<PatientRefund> PatientRefunds { get; set; } = null!;
+        public DbSet<PatientAccount> PatientAccounts { get; set; } = null!;
 
         // HR Management
         public DbSet<Employee> Employees { get; set; } = null!;
