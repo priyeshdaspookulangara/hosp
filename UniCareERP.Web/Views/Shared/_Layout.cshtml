@@ -66,6 +66,15 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Index">Sales History</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="reportsMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Reports
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="reportsMenuDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Reports" asp-action="Procedures">Procedure Report</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Reports" asp-action="Finance">Finance Report</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
