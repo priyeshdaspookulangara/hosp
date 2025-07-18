@@ -25,6 +25,7 @@ namespace UniCareERP.Domain.Entities.Finance
         public InvoiceStatus Status { get; set; }
 
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
+        public virtual ICollection<ProcedureCharge> ProcedureCharges { get; set; } = new List<ProcedureCharge>();
 
         // Optional: Reference to the appointment that generated this invoice
         public Guid? SourceAppointmentId { get; set; }
