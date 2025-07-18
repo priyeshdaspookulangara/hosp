@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UniCareERP.Domain\UniCareERP.Domain.csproj" />
+    <ProjectReference Include="..\UniCareERP.Infrastructure\UniCareERP.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
