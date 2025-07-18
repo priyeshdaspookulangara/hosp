@@ -34,6 +34,11 @@ namespace UniCareERP.Infrastructure.Data
         public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
         public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
 
+        // Pharmacy Management
+        public DbSet<UniCareERP.Domain.Entities.Pharmacy.Drug> Drugs { get; set; } = null!;
+        public DbSet<UniCareERP.Domain.Entities.Pharmacy.Prescription> PharmacyPrescriptions { get; set; } = null!;
+        public DbSet<UniCareERP.Domain.Entities.Pharmacy.PrescriptionItem> PharmacyPrescriptionItems { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

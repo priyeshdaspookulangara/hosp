@@ -1,0 +1,45 @@
+@model IEnumerable<UniCareERP.Application.DTOs.Pharmacy.PrescriptionDto>
+
+<h2>Prescriptions</h2>
+
+<p>
+    <a asp-action="CreatePrescription">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PatientId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DoctorId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    <a asp-action="EditPrescription" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="DetailsPrescription" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="DeletePrescription" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

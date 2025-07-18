@@ -38,6 +38,9 @@ builder.Services.AddScoped<UniCareERP.Application.Services.HR.IEmployeeService, 
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.ILeaveRequestService, UniCareERP.Application.Services.HR.LeaveRequestService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPrescriptionService, UniCareERP.Application.Services.Patients.PrescriptionService>(); // Added PrescriptionService
 builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardService, UniCareERP.Application.Services.Dashboard.DashboardService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Pharmacy.IPharmacyService, UniCareERP.Application.Services.Pharmacy.PharmacyService>();
+builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IDrugRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.DrugRepository>();
+builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IPrescriptionRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.PrescriptionRepository>();
 
 builder.Services.AddControllersWithViews();
 
