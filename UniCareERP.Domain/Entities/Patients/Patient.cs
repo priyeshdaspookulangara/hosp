@@ -37,6 +37,7 @@ namespace UniCareERP.Domain.Entities.Patients
         // Navigation properties (examples)
         // public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         // public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
+        public virtual ICollection<Procedure> Procedures { get; set; } = new List<Procedure>();
 
         public Patient()
         {

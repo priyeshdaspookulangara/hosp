@@ -1,0 +1,59 @@
+@model IEnumerable<UniCareERP.Application.DTOs.Procedures.ProcedureDto>
+
+@{
+    ViewData["Title"] = "Procedures";
+}
+
+<h1>Procedures</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProcedureCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProcedureName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProcedureDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcedureCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcedureName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcedureDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UniCareERP.Domain.Entities;
-using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Finance;
 using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Domain.Entities.Inventory;
+using UniCareERP.Domain.Entities.Patients;
+using UniCareERP.Domain.Entities.Procedures;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -21,6 +22,8 @@ namespace UniCareERP.Infrastructure.Data
         public DbSet<Appointment> Appointments { get; set; } = null!;
         public DbSet<Prescription> Prescriptions { get; set; } = null!;
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
+        public DbSet<Procedure> Procedures { get; set; } = null!;
+        public DbSet<ProcedureCharge> ProcedureCharges { get; set; } = null!;
 
         // Finance Management
         public DbSet<Invoice> Invoices { get; set; } = null!;
@@ -76,6 +79,22 @@ namespace UniCareERP.Infrastructure.Data
             builder.Entity<SalaryStructure>().Property(p => p.ProvidentFund).HasPrecision(18, 2);
             builder.Entity<InventoryItem>().Property(p => p.CostPrice).HasPrecision(18, 2);
             builder.Entity<InventoryItem>().Property(p => p.UnitPrice).HasPrecision(18, 2);
+
+            builder.Entity<ProcedureCharge>(b =>
+            {
+                b.ToTable("ProcedureCharges");
+                b.HasKey(pc => pc.Id);
+                b.Property(pc => pc.Amount).HasColumnType("decimal(18,2)");
+
+                b.HasOne(pc => pc.Procedure)
+                 .WithMany(p => p.ProcedureCharges)
+                 .HasForeignKey(pc => pc.ProcedureId);
+
+                b.HasOne(pc => pc.Invoice)
+                 .WithMany(i => i.ProcedureCharges)
+                 .HasForeignKey(pc => pc.InvoiceId)
+                 .IsRequired(false);
+            });
         }
     }
 }
