@@ -54,6 +54,7 @@
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Patient</a>
     <a asp-controller="Appointments" asp-action="Create" asp-route-patientId="@Model.Id" class="btn btn-success ms-2">Schedule New Appointment</a>
     <a asp-controller="Invoices" asp-action="Create" asp-route-patientId="@Model.Id" class="btn btn-warning ms-2">Create New Invoice</a>
+    <a asp-controller="Lab" asp-action="CreateOrder" asp-route-patientId="@Model.Id" class="btn btn-info ms-2">Create Lab Order</a>
     <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
 </div>
 
@@ -64,6 +65,7 @@
     <button class="nav-link active" id="nav-appointments-tab" data-bs-toggle="tab" data-bs-target="#nav-appointments" type="button" role="tab" aria-controls="nav-appointments" aria-selected="true">Appointments</button>
     <button class="nav-link" id="nav-prescriptions-tab" data-bs-toggle="tab" data-bs-target="#nav-prescriptions" type="button" role="tab" aria-controls="nav-prescriptions" aria-selected="false">Prescriptions</button>
     <button class="nav-link" id="nav-invoices-tab" data-bs-toggle="tab" data-bs-target="#nav-invoices" type="button" role="tab" aria-controls="nav-invoices" aria-selected="false">Invoices</button>
+    <button class="nav-link" id="nav-lab-orders-tab" data-bs-toggle="tab" data-bs-target="#nav-lab-orders" type="button" role="tab" aria-controls="nav-lab-orders" aria-selected="false">Lab Orders</button>
   </div>
 </nav>
 <div class="tab-content border border-top-0 p-3" id="nav-tabContent">
@@ -152,6 +154,34 @@
     else
     {
         <p>No invoices found for this patient.</p>
+    }
+  </div>
+  <div class="tab-pane fade" id="nav-lab-orders" role="tabpanel" aria-labelledby="nav-lab-orders-tab">
+    <h5>Patient Lab Orders</h5>
+    @{
+        var labOrders = ViewBag.PatientLabOrders as IEnumerable<UniCareERP.Application.DTOs.Lab.LabOrderDto>;
+    }
+    @if (labOrders != null && labOrders.Any())
+    {
+        <table class="table table-sm table-hover">
+            <thead><tr><th>Order Date</th><th>Test Name</th><th>Status</th><th>Result</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var order in labOrders.OrderByDescending(o => o.OrderDate))
+                {
+                    <tr>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.LabTestName</td>
+                        <td>@order.Status</td>
+                        <td>@order.Result</td>
+                        <td><a asp-controller="Lab" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-xs btn-outline-info">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No lab orders found for this patient.</p>
     }
   </div>
 </div>

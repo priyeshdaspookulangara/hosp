@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UniCareERP.Domain.Entities.Billing;
+using UniCareERP.Domain.Entities.Finance;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Enums;
 

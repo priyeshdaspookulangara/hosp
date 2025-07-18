@@ -85,7 +85,7 @@ namespace UniCareERP.Application.Tests.Services
                 }
             };
 
-            _mockPoDbSet.Setup(m => m.Include(It.IsAny<string>()).ThenInclude(It.IsAny<string>()))
+            _mockPoDbSet.Setup(m => m.Include(It.IsAny<string>()))
                         .Returns(_mockPoDbSet.Object);
 
             // Act

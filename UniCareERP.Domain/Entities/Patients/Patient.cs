@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UniCareERP.Domain.Entities.Procedures;
 
 namespace UniCareERP.Domain.Entities.Patients
 {

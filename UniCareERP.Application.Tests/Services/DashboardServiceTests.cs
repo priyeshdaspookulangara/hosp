@@ -7,12 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UniCareERP.Application.Services.Dashboard;
-using UniCareERP.Domain.Entities.Appointments;
+using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Finance;
 using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Enums;
 using UniCareERP.Infrastructure.Data;
+using UniCareERP.Application.Tests.Helpers;
 
 namespace UniCareERP.Application.Tests.Services
 {
