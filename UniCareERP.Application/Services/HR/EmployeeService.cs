@@ -248,6 +248,49 @@ namespace UniCareERP.Application.Services.HR
         }
 
 
+        public async Task<bool> DeleteEmployeeAsync(Guid employeeId)
+        {
+            var employee = await _context.Employees
+                                         .Include(e => e.ApplicationUser)
+                                         .FirstOrDefaultAsync(e => e.Id == employeeId);
+
+            if (employee == null)
+            {
+                _logger.LogWarning($"Employee with ID {employeeId} not found for deletion.");
+                return false;
+            }
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Step 1: Delete the Employee record
+                _context.Employees.Remove(employee);
+
+                // Step 2: Delete the associated ApplicationUser
+                if (employee.ApplicationUser != null)
+                {
+                    var result = await _userManager.DeleteAsync(employee.ApplicationUser);
+                    if (!result.Succeeded)
+                    {
+                        await transaction.RollbackAsync();
+                        _logger.LogError($"Failed to delete ApplicationUser for employee {employee.EmployeeCode}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                        return false;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                _logger.LogInformation($"Employee {employee.EmployeeCode} and associated user deleted successfully.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, $"An error occurred during the deletion of employee {employee.EmployeeCode}.");
+                return false;
+            }
+        }
+
         private static EmployeeDto MapEmployeeToDto(Employee employee, ApplicationUser? user)
         {
             return new EmployeeDto

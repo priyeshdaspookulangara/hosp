@@ -9,9 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace UniCareERP.Infrastructure.Data
 {
+    public class SeedDataRunner
+    {
+    }
+
     public static class SeedData
     {
-        public static async TaskInitialize(IServiceProvider serviceProvider, ILogger<SeedData> logger)
+        public static async Task Initialize(IServiceProvider serviceProvider, ILogger<SeedDataRunner> logger)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();

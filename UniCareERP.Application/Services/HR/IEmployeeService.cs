@@ -14,5 +14,6 @@ namespace UniCareERP.Application.Services.HR
         Task<EmployeeDto?> UpdateEmployeeAsync(UpdateEmployeeDto updateDto);
         Task<bool> DeactivateEmployeeAsync(Guid employeeId);
         Task<bool> ReactivateEmployeeAsync(Guid employeeId);
+        Task<bool> DeleteEmployeeAsync(Guid employeeId);
     }
 }

@@ -29,10 +29,16 @@ namespace UniCareERP.Infrastructure.Data
         // HR Management
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<LeaveRequest> LeaveRequests { get; set; } = null!;
+        public DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
+        public DbSet<Payroll> Payrolls { get; set; } = null!;
+        public DbSet<Payslip> Payslips { get; set; } = null!;
+        public DbSet<SalaryStructure> SalaryStructures { get; set; } = null!;
 
         // Inventory Management
         public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
         public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
+        public DbSet<Sale> Sales { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -53,6 +59,23 @@ namespace UniCareERP.Infrastructure.Data
             {
                 b.Property(r => r.Description).HasMaxLength(255);
             });
+
+            // Configure decimal properties
+            builder.Entity<GeneralLedgerAccount>().Property(p => p.Balance).HasPrecision(18, 2);
+            builder.Entity<LeaveBalance>().Property(p => p.EntitledDays).HasPrecision(18, 2);
+            builder.Entity<LeaveBalance>().Property(p => p.UsedDays).HasPrecision(18, 2);
+            builder.Entity<Payroll>().Property(p => p.GrossSalary).HasPrecision(18, 2);
+            builder.Entity<Payroll>().Property(p => p.NetSalary).HasPrecision(18, 2);
+            builder.Entity<Payroll>().Property(p => p.TotalDeductions).HasPrecision(18, 2);
+            builder.Entity<Payslip>().Property(p => p.Amount).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.BasicSalary).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.ConveyanceAllowance).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.HouseRentAllowance).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.MedicalAllowance).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.ProfessionalTax).HasPrecision(18, 2);
+            builder.Entity<SalaryStructure>().Property(p => p.ProvidentFund).HasPrecision(18, 2);
+            builder.Entity<InventoryItem>().Property(p => p.CostPrice).HasPrecision(18, 2);
+            builder.Entity<InventoryItem>().Property(p => p.UnitPrice).HasPrecision(18, 2);
         }
     }
 }

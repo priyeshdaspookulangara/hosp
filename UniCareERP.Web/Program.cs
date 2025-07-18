@@ -2,9 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UniCareERP.Domain.Entities;
 using UniCareERP.Infrastructure.Data;
-using UniCareERP.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection; // Required for CreateScope
 using Microsoft.Extensions.Logging; // Required for ILogger
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -32,10 +33,12 @@ builder.Services.AddScoped<UniCareERP.Application.Services.IRoleService, UniCare
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPatientService, UniCareERP.Application.Services.Patients.PatientService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Appointments.IAppointmentService, UniCareERP.Application.Services.Appointments.AppointmentService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IInvoiceService, UniCareERP.Application.Services.Finance.InvoiceService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.Finance.IGeneralLedgerService, UniCareERP.Application.Services.Finance.GeneralLedgerService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Inventory.IInventoryService, UniCareERP.Application.Services.Inventory.InventoryService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Inventory.ISaleService, UniCareERP.Application.Services.Inventory.SaleService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.IEmployeeService, UniCareERP.Application.Services.HR.EmployeeService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.HR.ILeaveRequestService, UniCareERP.Application.Services.HR.LeaveRequestService>();
+builder.Services.AddScoped<UniCareERP.Application.Services.HR.IPayrollService, UniCareERP.Application.Services.HR.PayrollService>();
 builder.Services.AddScoped<UniCareERP.Application.Services.Patients.IPrescriptionService, UniCareERP.Application.Services.Patients.PrescriptionService>(); // Added PrescriptionService
 builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardService, UniCareERP.Application.Services.Dashboard.DashboardService>();
 
@@ -77,7 +80,7 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var seedDataLogger = services.GetRequiredService<ILogger<SeedData>>();
+    var seedDataLogger = services.GetRequiredService<ILogger<SeedDataRunner>>();
     var appLogger = services.GetRequiredService<ILogger<Program>>(); // For general app logging if needed elsewhere
     try
     {

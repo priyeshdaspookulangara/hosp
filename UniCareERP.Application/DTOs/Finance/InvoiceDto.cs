@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using UniCareERP.Domain.Enums;
 
 namespace UniCareERP.Application.DTOs.Finance

@@ -1,0 +1,55 @@
+@model IEnumerable<UniCareERP.Application.DTOs.HR.PayrollDto>
+
+@{
+    ViewData["Title"] = "Payrolls";
+}
+
+<h1>Payrolls</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PayPeriodStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayPeriodEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrossSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalDeductions)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayPeriodStartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayPeriodEndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GrossSalary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NetSalary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalDeductions)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-payrollId="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
