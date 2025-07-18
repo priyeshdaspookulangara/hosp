@@ -39,7 +39,7 @@ namespace UniCareERP.Web.Controllers
             ViewData["CurrentSearchDate"] = searchDate?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd");
             ViewData["CurrentDoctorId"] = doctorId;
 
-            await PopulateDoctors ViewBag();
+            await PopulateDoctorsViewBag();
 
             var appointments = Enumerable.Empty<AppointmentDto>();
             DateTime dateToQuery = searchDate ?? DateTime.Today;

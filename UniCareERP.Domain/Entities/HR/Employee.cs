@@ -24,8 +24,10 @@ namespace UniCareERP.Domain.Entities.HR
         public string? Address { get; set; }
         public bool IsActive { get; set; } = true; // Employment Status
 
-        // public virtual ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
-        // public virtual ICollection<Payroll> Payrolls { get; set; } = new List<Payroll>();
+        public virtual ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
+        public virtual ICollection<LeaveBalance> LeaveBalances { get; set; } = new List<LeaveBalance>();
+        public virtual ICollection<Payroll> Payrolls { get; set; } = new List<Payroll>();
+        public virtual SalaryStructure SalaryStructure { get; set; }
 
         public Employee()
         {

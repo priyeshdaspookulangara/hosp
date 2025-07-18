@@ -147,5 +147,39 @@ namespace UniCareERP.Web.Controllers
             var roles = await _roleService.GetAllRolesAsync();
             ViewBag.Roles = new SelectList(roles, "Name", "Name");
         }
+
+        // GET: Employees/Delete/5
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
+        // POST: Employees/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var success = await _employeeService.DeleteEmployeeAsync(id);
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Employee deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to delete employee.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
