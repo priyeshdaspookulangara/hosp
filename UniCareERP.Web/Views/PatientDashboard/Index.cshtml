@@ -1,0 +1,144 @@
+@model UniCareERP.Application.DTOs.PatientDashboard.PatientDashboardDto
+
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<h1>Patient Dashboard</h1>
+
+<div>
+    <h4>@Model.Patient.FirstName @Model.Patient.LastName</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Patient Code
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Patient.PatientCode
+        </dd>
+        <dt class = "col-sm-2">
+            Date of Birth
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Patient.DateOfBirth.ToShortDateString()
+        </dd>
+        <dt class = "col-sm-2">
+            Gender
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Patient.Gender
+        </dd>
+        <dt class = "col-sm-2">
+            Phone Number
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Patient.PhoneNumber
+        </dd>
+        <dt class = "col-sm-2">
+            Email
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Patient.Email
+        </dd>
+    </dl>
+</div>
+
+<h2>Appointments</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Service Type</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Appointments) {
+        <tr>
+            <td>
+                @item.AppointmentDateTime
+            </td>
+            <td>
+                @item.DoctorName
+            </td>
+            <td>
+                @item.ServiceType
+            </td>
+            <td>
+                @item.Status
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<h2>Invoices</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Invoice Number</th>
+            <th>Invoice Date</th>
+            <th>Total Amount</th>
+            <th>Amount Paid</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Invoices) {
+        <tr>
+            <td>
+                @item.InvoiceNumber
+            </td>
+            <td>
+                @item.InvoiceDate.ToShortDateString()
+            </td>
+            <td>
+                @item.TotalAmount
+            </td>
+            <td>
+                @item.AmountPaid
+            </td>
+            <td>
+                @item.Status
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<h2>Prescriptions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Prescription Date</th>
+            <th>Doctor</th>
+            <th>Status</th>
+            <th>Items</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Prescriptions) {
+        <tr>
+            <td>
+                @item.PrescriptionDate.ToShortDateString()
+            </td>
+            <td>
+                @item.DoctorName
+            </td>
+            <td>
+                @item.Status
+            </td>
+            <td>
+                @item.NumberOfItems
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<div>
+    <a asp-action="Edit" asp-controller="Patients" asp-route-id="@Model.Patient.Id">Edit</a> |
+    <a asp-action="Index" asp-controller="Patients">Back to List</a>
+</div>
