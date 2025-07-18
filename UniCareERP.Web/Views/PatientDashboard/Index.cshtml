@@ -88,7 +88,7 @@
 @foreach (var item in Model.Invoices) {
         <tr>
             <td>
-                @item.InvoiceNumber
+                <a asp-controller="Invoices" asp-action="Details" asp-route-id="@item.Id">@item.InvoiceNumber</a>
             </td>
             <td>
                 @item.InvoiceDate.ToShortDateString()
