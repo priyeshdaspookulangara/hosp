@@ -6,7 +6,7 @@ namespace UniCareERP.Application.DTOs.HR
     {
         public Guid Id { get; set; }
         public Guid PayrollId { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         public decimal Amount { get; set; }
     }
 }

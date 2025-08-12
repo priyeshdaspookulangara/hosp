@@ -10,10 +10,10 @@ namespace UniCareERP.Domain.Entities.HR
 
         [Required]
         public Guid PayrollId { get; set; }
-        public Payroll Payroll { get; set; }
+        public Payroll Payroll { get; set; } = null!;
 
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public decimal Amount { get; set; }

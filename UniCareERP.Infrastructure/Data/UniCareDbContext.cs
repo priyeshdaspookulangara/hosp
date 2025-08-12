@@ -51,6 +51,9 @@ namespace UniCareERP.Infrastructure.Data
         public DbSet<UniCareERP.Domain.Entities.Pharmacy.Prescription> PharmacyPrescriptions { get; set; } = null!;
         public DbSet<UniCareERP.Domain.Entities.Pharmacy.PrescriptionItem> PharmacyPrescriptionItems { get; set; } = null!;
 
+        // Schedule Management
+        public DbSet<UniCareERP.Domain.Entities.Schedules.Schedule> Schedules { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -8,9 +8,9 @@ namespace UniCareERP.Domain.Entities.Pharmacy
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
-        public Patient Patient { get; set; }
+        public Patient Patient { get; set; } = null!;
         public int DoctorId { get; set; }
         public DateTime Date { get; set; }
-        public ICollection<PrescriptionItem> PrescriptionItems { get; set; }
+        public ICollection<PrescriptionItem> PrescriptionItems { get; set; } = new List<PrescriptionItem>();
     }
 }

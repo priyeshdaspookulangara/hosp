@@ -6,9 +6,9 @@ namespace UniCareERP.Application.DTOs.PatientDashboard
 {
     public class PatientDashboardDto
     {
-        public PatientDto Patient { get; set; }
-        public IEnumerable<PatientAppointmentSummaryDto> Appointments { get; set; }
-        public IEnumerable<PatientInvoiceSummaryDto> Invoices { get; set; }
-        public IEnumerable<PatientPrescriptionSummaryDto> Prescriptions { get; set; }
+        public PatientDto Patient { get; set; } = null!;
+        public IEnumerable<PatientAppointmentSummaryDto> Appointments { get; set; } = new List<PatientAppointmentSummaryDto>();
+        public IEnumerable<PatientInvoiceSummaryDto> Invoices { get; set; } = new List<PatientInvoiceSummaryDto>();
+        public IEnumerable<PatientPrescriptionSummaryDto> Prescriptions { get; set; } = new List<PatientPrescriptionSummaryDto>();
     }
 }

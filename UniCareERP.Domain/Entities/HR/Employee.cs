@@ -27,7 +27,7 @@ namespace UniCareERP.Domain.Entities.HR
         public virtual ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
         public virtual ICollection<LeaveBalance> LeaveBalances { get; set; } = new List<LeaveBalance>();
         public virtual ICollection<Payroll> Payrolls { get; set; } = new List<Payroll>();
-        public virtual SalaryStructure SalaryStructure { get; set; }
+        public virtual SalaryStructure SalaryStructure { get; set; } = null!;
 
         public Employee()
         {

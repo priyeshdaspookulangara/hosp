@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<UniCareDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlite(connectionString));
 
 // Configure ASP.NET Core Identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -44,6 +44,11 @@ builder.Services.AddScoped<UniCareERP.Application.Services.Dashboard.IDashboardS
 builder.Services.AddScoped<UniCareERP.Application.Services.Pharmacy.IPharmacyService, UniCareERP.Application.Services.Pharmacy.PharmacyService>();
 builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IDrugRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.DrugRepository>();
 builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Pharmacy.IPrescriptionRepository, UniCareERP.Infrastructure.Repositories.Pharmacy.PrescriptionRepository>();
+
+builder.Services.AddScoped<UniCareERP.Application.Services.Schedules.IScheduleService, UniCareERP.Application.Services.Schedules.ScheduleService>();
+builder.Services.AddScoped<UniCareERP.Infrastructure.Repositories.Schedules.IScheduleRepository, UniCareERP.Infrastructure.Repositories.Schedules.ScheduleRepository>();
+
+builder.Services.AddAutoMapper(typeof(UniCareERP.Application.AutoMapperProfile));
 
 builder.Services.AddControllersWithViews();
 

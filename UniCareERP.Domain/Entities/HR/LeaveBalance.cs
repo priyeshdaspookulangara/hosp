@@ -11,7 +11,7 @@ namespace UniCareERP.Domain.Entities.HR
 
         [Required]
         public Guid EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        public Employee Employee { get; set; } = null!;
 
         [Required]
         public LeaveType LeaveType { get; set; }

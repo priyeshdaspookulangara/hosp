@@ -7,7 +7,7 @@ namespace UniCareERP.Application.DTOs.HR
     {
         public Guid Id { get; set; }
         public Guid EmployeeId { get; set; }
-        public string EmployeeName { get; set; }
+        public string EmployeeName { get; set; } = string.Empty;
         public DateTime PayPeriodStartDate { get; set; }
         public DateTime PayPeriodEndDate { get; set; }
         public decimal GrossSalary { get; set; }

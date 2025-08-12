@@ -9,6 +9,6 @@ namespace UniCareERP.Application.DTOs.Finance
         public DateTime StatementDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<StatementItemDto> Items { get; set; }
+        public List<StatementItemDto> Items { get; set; } = new List<StatementItemDto>();
     }
 }
