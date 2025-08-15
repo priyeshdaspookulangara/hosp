@@ -29,10 +29,11 @@ namespace UniCareERP.Application.Services
                 LastName = createUserDto.LastName,
                 EmployeeId = createUserDto.EmployeeId,
                 IsActive = createUserDto.IsActive,
-                EmailConfirmed = true // Assuming email confirmation is not strictly required initially or handled elsewhere
+                EmailConfirmed = true, // Assuming email confirmation is not strictly required initially or handled elsewhere
+                Password = createUserDto.Password
             };
 
-            var result = await _userManager.CreateAsync(user, createUserDto.Password);
+            var result = await _userManager.CreateAsync(user);
             if (!result.Succeeded)
             {
                 return (false, null, result.Errors.Select(e => e.Description));

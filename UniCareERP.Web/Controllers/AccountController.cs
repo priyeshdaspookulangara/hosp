@@ -39,22 +39,12 @@ namespace UniCareERP.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null && user.Password == model.Password)
                 {
+                    await _signInManager.SignInAsync(user, model.RememberMe);
                     _logger.LogInformation($"User {model.Email} logged in.");
                     return RedirectToLocal(returnUrl);
-                }
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                //}
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning($"User {model.Email} account locked out.");
-                    return View("Lockout"); // You would need to create a Lockout.cshtml view
                 }
                 else
                 {
