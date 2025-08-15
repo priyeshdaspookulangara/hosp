@@ -50,7 +50,7 @@ namespace UniCareERP.Infrastructure.Data
 
             // Create Admin User
             string adminUserName = "admin@unicare.com";
-            string adminPassword = "AdminPassword123!"; // Store this securely (e.g., config) for real apps
+            string adminPassword = "password"; // Store this securely (e.g., config) for real apps
 
             if (await userManager.FindByNameAsync(adminUserName) == null)
             {

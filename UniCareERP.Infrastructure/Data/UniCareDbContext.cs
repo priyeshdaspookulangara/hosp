@@ -101,12 +101,19 @@ namespace UniCareERP.Infrastructure.Data
 
                 b.HasOne(pc => pc.Procedure)
                  .WithMany(p => p.ProcedureCharges)
-                 .HasForeignKey(pc => pc.ProcedureId);
+                 .HasForeignKey(pc => pc.ProcedureId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
                 b.HasOne(pc => pc.Invoice)
                  .WithMany(i => i.ProcedureCharges)
                  .HasForeignKey(pc => pc.InvoiceId)
                  .IsRequired(false);
+
+                // Add this to prevent cascade delete from Patient
+                b.HasOne(pc => pc.Patient)
+                 .WithMany() // No navigation property on Patient back to ProcedureCharge
+                 .HasForeignKey(pc => pc.PatientId)
+                 .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }
