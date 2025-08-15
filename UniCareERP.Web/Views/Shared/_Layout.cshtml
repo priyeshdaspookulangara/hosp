@@ -1,106 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - UniCareERP.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/UniCareERP.Web.styles.css" asp-append-version="true" />
+<html lang="en" dir="ltr"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - UniCareERP</title>
+
+    <!-- Meta, CSS, and other head elements remain the same -->
+    <meta name="robots" content="noindex">
+    <link type="text/css" href="~/css/simplebar.min.css" rel="stylesheet">
+    <link type="text/css" href="~/css/app.css" rel="stylesheet">
+    <link type="text/css" href="~/css/vendor-material-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link type="text/css" href="~/css/vendor-flatpickr.css" rel="stylesheet">
+    <link type="text/css" href="~/css/vendor-flatpickr-airbnb.css" rel="stylesheet">
+
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">UniCareERP</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="adminMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Administration
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="adminMenuDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">User Management</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="Index">Role Management</a></li>
-                            </ul>
-                        </li>
+<body class="layout-default">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Patients" asp-action="Index">Patients</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Invoices" asp-action="Index">Finance</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Lab" asp-action="Index">Lab</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequests" asp-action="Index">My Leave</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="hrMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                HR
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="hrMenuDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Index">Employee Management</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="LeaveRequests" asp-action="Manage">Manage Leave Requests</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="inventoryMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Inventory
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="inventoryMenuDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Inventory" asp-action="Index">Item Master</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="PurchaseOrders" asp-action="Index">Purchase Orders</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="PointOfSale">Point of Sale</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Sales" asp-action="Index">Sales History</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="reportsMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Reports
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="reportsMenuDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Reports" asp-action="Procedures">Procedure Report</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Reports" asp-action="Finance">Finance Report</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+    <div class="preloader" style="display: none;"></div>
+
+    <div class="mdk-header-layout js-mdk-header-layout" data-domfactory-upgraded="mdk-header-layout">
+        <!-- Header -->
+        <div id="header" class="mdk-header js-mdk-header m-0" data-fixed="" data-retarget-mouse-scroll="" data-domfactory-upgraded="mdk-header" style="padding-top: 64px;"><div class="mdk-header__bg"><div class="mdk-header__bg-front"></div><div class="mdk-header__bg-rear"></div></div>
+            <div class="mdk-header__content">
+                <div class="navbar navbar-expand-sm navbar-main navbar-dark bg-dark pr-0 mdk-header--fixed" id="navbar" data-primary="data-primary">
+                    <div class="container-fluid p-0">
+                        <button class="navbar-toggler navbar-toggler-right d-block d-md-none" type="button" data-toggle="sidebar"><span class="navbar-toggler-icon"></span></button>
+                        <a href="index.html" class="navbar-brand "><i class="material-icons">local_hospital</i><span>UniCareERP</span></a>
+                        <ul class="nav navbar-nav d-none d-sm-flex border-left navbar-height align-items-center">
+                            <li class="nav-item dropdown">
+                                <partial name="_LoginPartial" />
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
+        <!-- // END Header -->
+        <div class="mdk-header-layout__content" style="padding-top: 64px;">
+            <div class="mdk-drawer-layout js-mdk-drawer-layout" data-push="" data-responsive-width="992px" data-domfactory-upgraded="mdk-drawer-layout">
+                <div class="mdk-drawer-layout__content page" style="transform: translate3d(0px, 0px, 0px);">
+                    <div class="container-fluid page__container">
+                        @RenderBody()
+                    </div>
+                </div>
+                <!-- // END drawer-layout__content -->
+                <div class="mdk-drawer js-mdk-drawer" id="default-drawer" data-align="start" data-position="left" data-domfactory-upgraded="mdk-drawer"><div class="mdk-drawer__scrim" style=""></div>
+                    <div class="mdk-drawer__content" style="">
+                        <div class="sidebar sidebar-light sidebar-left simplebar" data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content" style="padding: 0px; height: 100%; overflow: hidden;">
+                            <div class="sidebar-heading sidebar-m-t">Menu</div>
+                            <ul class="sidebar-menu">
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" asp-controller="Home" asp-action="Index">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-tachometer-alt"></i><span class="sidebar-menu-text">Dashboard</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" asp-controller="Appointments" asp-action="Index">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-calendar-check"></i><span class="sidebar-menu-text">Appointments</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" asp-controller="Patients" asp-action="Index">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-user-injured"></i><span class="sidebar-menu-text">Patients</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" asp-controller="Lab" asp-action="Index">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-flask"></i><span class="sidebar-menu-text">Lab</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#finance_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-file-invoice-dollar"></i><span class="sidebar-menu-text">Finance</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="finance_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Invoices" asp-action="Index"><span class="sidebar-menu-text">Invoices</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Sales" asp-action="PointOfSale"><span class="sidebar-menu-text">Point of Sale</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Sales" asp-action="Index"><span class="sidebar-menu-text">Sales History</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#hr_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-users"></i><span class="sidebar-menu-text">HR</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="hr_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Employees" asp-action="Index"><span class="sidebar-menu-text">Employee Management</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="LeaveRequests" asp-action="Index"><span class="sidebar-menu-text">My Leave</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="LeaveRequests" asp-action="Manage"><span class="sidebar-menu-text">Manage Leave</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#inventory_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-boxes"></i><span class="sidebar-menu-text">Inventory</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="inventory_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Inventory" asp-action="Index"><span class="sidebar-menu-text">Item Master</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="PurchaseOrders" asp-action="Index"><span class="sidebar-menu-text">Purchase Orders</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#reports_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-chart-pie"></i><span class="sidebar-menu-text">Reports</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="reports_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Reports" asp-action="Procedures"><span class="sidebar-menu-text">Procedure Report</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Reports" asp-action="Finance"><span class="sidebar-menu-text">Finance Report</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#admin_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-cogs"></i><span class="sidebar-menu-text">Administration</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="admin_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Users" asp-action="Index"><span class="sidebar-menu-text">User Management</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="Roles" asp-action="Index"><span class="sidebar-menu-text">Role Management</span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div></div></div><div class="simplebar-placeholder" style="width: 299px; height: 666px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); visibility: hidden;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: hidden;"><div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); visibility: hidden;"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - UniCareERP.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- NEW: View Schedules Modal -->
+    <div class="modal fade" id="viewSchedulesModal" tabindex="-1" role="dialog" aria-labelledby="viewSchedulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewSchedulesModalLabel">Schedule for <span id="modalDoctorName"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="doctorCalendar"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </div>
+
+    <!-- jQuery, Popper, Bootstrap, etc. -->
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/simplebar.min.js"></script>
+    <script src="~/js/dom-factory.js"></script>
+    <script src="~/js/material-design-kit.js"></script>
+    <script src="~/js/app.js"></script>
+    <script src="~/js/flatpickr.min.js"></script>
+    <script src="~/js/flatpickr.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+</body><chatgpt-sidebar data-gpts-theme="light"></chatgpt-sidebar></html>

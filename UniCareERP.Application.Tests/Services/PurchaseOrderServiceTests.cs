@@ -11,6 +11,7 @@ using UniCareERP.Application.Services.Inventory;
 using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Enums;
 using UniCareERP.Infrastructure.Data;
+using UniCareERP.Application.Tests.Helpers;
 
 namespace UniCareERP.Application.Tests.Services
 {
