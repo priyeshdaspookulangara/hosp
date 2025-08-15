@@ -8,6 +8,7 @@ namespace UniCareERP.Domain.Entities
         public string? LastName { get; set; }
         public string? EmployeeId { get; set; } // Could be relevant for linking to HR module
         public bool IsActive { get; set; } = true;
+        public string? Password { get; set; }
         // Add other custom properties for a user here
     }
 }
