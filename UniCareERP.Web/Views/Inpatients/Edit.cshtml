@@ -1,0 +1,64 @@
+@model UniCareERP.Application.DTOs.Inpatient.UpdateInpatientDto
+
+@{
+    ViewData["Title"] = "Edit Inpatient";
+}
+
+<h1>Edit Inpatient</h1>
+
+<h4>Inpatient</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="PatientId" class="control-label"></label>
+                <input asp-for="PatientId" class="form-control" />
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdmissionDate" class="control-label"></label>
+                <input asp-for="AdmissionDate" class="form-control" />
+                <span asp-validation-for="AdmissionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DischargeDate" class="control-label"></label>
+                <input asp-for="DischargeDate" class="form-control" />
+                <span asp-validation-for="DischargeDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomNumber" class="control-label"></label>
+                <input asp-for="RoomNumber" class="form-control" />
+                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BedNumber" class="control-label"></label>
+                <input asp-for="BedNumber" class="form-control" />
+                <span asp-validation-for="BedNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdmissionReason" class="control-label"></label>
+                <input asp-for="AdmissionReason" class="form-control" />
+                <span asp-validation-for="AdmissionReason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DischargeReason" class="control-label"></label>
+                <input asp-for="DischargeReason" class="form-control" />
+                <span asp-validation-for="DischargeReason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

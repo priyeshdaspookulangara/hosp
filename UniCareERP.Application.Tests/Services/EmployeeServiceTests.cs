@@ -12,61 +12,38 @@ using UniCareERP.Application.Services.HR;
 using UniCareERP.Domain.Entities;
 using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Infrastructure.Data;
+using Microsoft.Extensions.Options;
+using UniCareERP.Application.Tests.Helpers;
 
 namespace UniCareERP.Application.Tests.Services
 {
     [TestClass]
     public class EmployeeServiceTests
     {
-        private Mock<UniCareDbContext> _mockContext;
-        private Mock<DbSet<Employee>> _mockEmployeeDbSet;
+        private UniCareDbContext _context;
         private Mock<UserManager<ApplicationUser>> _mockUserManager;
         private Mock<ILogger<EmployeeService>> _mockLogger;
         private EmployeeService _employeeService;
 
-        private List<Employee> _seedEmployees;
-        private List<ApplicationUser> _seedUsers;
-
-        // Helper to create Mock UserManager
-        private Mock<UserManager<ApplicationUser>> GetMockUserManager()
-        {
-            var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
-            var userManager = new Mock<UserManager<ApplicationUser>>(
-                userStoreMock.Object, null, null, null, null, null, null, null, null);
-            return userManager;
-        }
-
         [TestInitialize]
         public void TestInitialize()
         {
-            _mockContext = new Mock<UniCareDbContext>(new DbContextOptions<UniCareDbContext>());
-            _mockEmployeeDbSet = new Mock<DbSet<Employee>>();
-            _mockUserManager = GetMockUserManager();
+            var options = new DbContextOptionsBuilder<UniCareDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+            _context = new UniCareDbContext(options);
+            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
+            var mockDatabase = new Mock<DatabaseFacade>(_context);
+            mockDatabase.Setup(d => d.BeginTransactionAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mockTransaction.Object);
+
+            var mockContext = new Mock<UniCareDbContext>(options);
+            mockContext.Setup(c => c.Database).Returns(mockDatabase.Object);
+
+            _mockUserManager = MockHelpers.GetMockUserManager();
             _mockLogger = new Mock<ILogger<EmployeeService>>();
 
-            _seedEmployees = new List<Employee>();
-            _seedUsers = new List<ApplicationUser>();
-
-            SetupMockDbSet(_mockEmployeeDbSet, _seedEmployees);
-            _mockContext.Setup(c => c.Employees).Returns(_mockEmployeeDbSet.Object);
-
-            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
-            _mockContext.Setup(c => c.Database.BeginTransactionAsync(It.IsAny<CancellationToken>()))
-                        .ReturnsAsync(mockTransaction.Object);
-
-            _mockContext.Setup(c => c.SaveChangesAsync(default)).ReturnsAsync(1);
-
-            _employeeService = new EmployeeService(_mockContext.Object, _mockUserManager.Object, _mockLogger.Object);
-        }
-
-        private void SetupMockDbSet<TEntity>(Mock<DbSet<TEntity>> mockDbSet, List<TEntity> sourceList) where TEntity : class
-        {
-            var queryableList = sourceList.AsQueryable();
-            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(queryableList.Provider);
-            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(queryableList.Expression);
-            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
-            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => queryableList.GetEnumerator());
-            mockDbSet.Setup(d => d.Add(It.IsAny<TEntity>())).Callback<TEntity>(s => sourceList.Add(s));
+            _employeeService = new EmployeeService(mockContext.Object, _mockUserManager.Object, _mockLogger.Object);
         }
 
         [TestMethod]
@@ -87,7 +64,7 @@ namespace UniCareERP.Application.Tests.Services
             _mockUserManager.Setup(um => um.FindByEmailAsync(createDto.Email)).ReturnsAsync((ApplicationUser)null);
             _mockUserManager.Setup(um => um.CreateAsync(It.IsAny<ApplicationUser>(), createDto.Password))
                             .ReturnsAsync(IdentityResult.Success)
-                            .Callback<ApplicationUser, string>((user, pass) => _seedUsers.Add(user)); // Simulate user creation
+                            .Callback<ApplicationUser, string>((user, pass) => _context.Users.Add(user)); // Simulate user creation
             _mockUserManager.Setup(um => um.AddToRolesAsync(It.IsAny<ApplicationUser>(), createDto.Roles))
                             .ReturnsAsync(IdentityResult.Success);
 
@@ -99,8 +76,7 @@ namespace UniCareERP.Application.Tests.Services
             Assert.AreEqual("New Employee", resultDto.FullName);
             _mockUserManager.Verify(um => um.CreateAsync(It.IsAny<ApplicationUser>(), createDto.Password), Times.Once);
             _mockUserManager.Verify(um => um.AddToRolesAsync(It.IsAny<ApplicationUser>(), createDto.Roles), Times.Once);
-            _mockEmployeeDbSet.Verify(db => db.Add(It.IsAny<Employee>()), Times.Once);
-            _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once); // Called once by EmployeeService
+            Assert.AreEqual(1, _context.Employees.Count());
         }
 
         [TestMethod]
@@ -117,7 +93,7 @@ namespace UniCareERP.Application.Tests.Services
 
             // Assert
             Assert.IsNull(resultDto);
-            _mockEmployeeDbSet.Verify(db => db.Add(It.IsAny<Employee>()), Times.Never);
+            Assert.AreEqual(0, _context.Employees.Count());
         }
 
         [TestMethod]
@@ -136,7 +112,7 @@ namespace UniCareERP.Application.Tests.Services
 
             // Assert
             Assert.IsNull(resultDto);
-            _mockEmployeeDbSet.Verify(db => db.Add(It.IsAny<Employee>()), Times.Never);
+            Assert.AreEqual(0, _context.Employees.Count());
         }
 
         [TestMethod]
@@ -147,23 +123,17 @@ namespace UniCareERP.Application.Tests.Services
             var employeeId = Guid.NewGuid();
             var user = new ApplicationUser { Id = userId, IsActive = true };
             var employee = new Employee { Id = employeeId, ApplicationUserId = userId, IsActive = true, ApplicationUser = user };
-            _seedEmployees.Add(employee);
-
-            // Mock FindAsync for Employee
-             var queryableList = _seedEmployees.AsQueryable();
-            _mockEmployeeDbSet.As<IQueryable<Employee>>().Setup(m => m.Provider).Returns(queryableList.Provider);
-            _mockEmployeeDbSet.As<IQueryable<Employee>>().Setup(m => m.Expression).Returns(queryableList.Expression);
-            _mockEmployeeDbSet.As<IQueryable<Employee>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
-            _mockEmployeeDbSet.As<IQueryable<Employee>>().Setup(m => m.GetEnumerator()).Returns(() => queryableList.GetEnumerator());
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
 
             // Act
             var result = await _employeeService.DeactivateEmployeeAsync(employeeId);
 
             // Assert
             Assert.IsTrue(result);
-            Assert.IsFalse(employee.IsActive);
-            Assert.IsFalse(user.IsActive);
-            _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
+            var deactivatedEmployee = await _context.Employees.FindAsync(employeeId);
+            Assert.IsFalse(deactivatedEmployee.IsActive);
+            Assert.IsFalse(deactivatedEmployee.ApplicationUser.IsActive);
         }
     }
 }
