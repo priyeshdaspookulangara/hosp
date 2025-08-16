@@ -9,6 +9,7 @@ using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Procedures;
 using UniCareERP.Domain.Entities.Lab;
 using UniCareERP.Domain.Entities.Inpatient;
+using UniCareERP.Domain.Entities.OperationTheatre;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -58,6 +59,11 @@ namespace UniCareERP.Infrastructure.Data
         public virtual DbSet<LabTest> LabTests { get; set; } = null!;
         public virtual DbSet<LabOrder> LabOrders { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
+
+        // Operation Theatre Management
+        public virtual DbSet<OperationTheatre> OperationTheatres { get; set; } = null!;
+        public virtual DbSet<Surgery> Surgeries { get; set; } = null!;
+        public virtual DbSet<SurgeryChecklist> SurgeryChecklists { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
