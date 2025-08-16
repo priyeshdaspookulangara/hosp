@@ -32,6 +32,7 @@ namespace UniCareERP.Infrastructure.Data
         public virtual DbSet<PatientPayment> PatientPayments { get; set; } = null!;
         public virtual DbSet<PatientRefund> PatientRefunds { get; set; } = null!;
         public virtual DbSet<PatientAccount> PatientAccounts { get; set; } = null!;
+        public virtual DbSet<OtherExpense> OtherExpenses { get; set; } = null!;
 
         // HR Management
         public virtual DbSet<Employee> Employees { get; set; } = null!;
@@ -114,6 +115,18 @@ namespace UniCareERP.Infrastructure.Data
                  .WithMany() // No navigation property on Patient back to ProcedureCharge
                  .HasForeignKey(pc => pc.PatientId)
                  .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<OtherExpense>(b =>
+            {
+                b.ToTable("OtherExpenses");
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Amount).HasColumnType("decimal(18,2)");
+
+                b.HasOne(e => e.GeneralLedgerAccount)
+                 .WithMany()
+                 .HasForeignKey(e => e.GeneralLedgerAccountId)
+                 .OnDelete(DeleteBehavior.Restrict); // Prevent deleting a GL account if it has expenses
             });
         }
     }
