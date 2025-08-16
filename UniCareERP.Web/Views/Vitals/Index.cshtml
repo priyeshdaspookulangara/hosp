@@ -1,0 +1,111 @@
+@model IEnumerable<UniCareERP.Application.DTOs.Vitals.VitalDto>
+
+@{
+    ViewData["Title"] = "Patient Vitals";
+    var patientId = Model.FirstOrDefault()?.PatientId;
+}
+
+<h1>Vitals for Patient</h1>
+
+@if (patientId != null)
+{
+    <p>
+        <a asp-action="Create" asp-route-patientId="@patientId">Record New Vitals</a>
+    </p>
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Vitals History</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Temp (°C)</th>
+                    <th>BP (Sys/Dia)</th>
+                    <th>Heart Rate</th>
+                    <th>Resp. Rate</th>
+                    <th>SpO2 (%)</th>
+                    <th>Recorded By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.RecordedAt.ToString("g")</td>
+                        <td>@item.TemperatureC</td>
+                        <td>@item.BloodPressureSystolic / @item.BloodPressureDiastolic</td>
+                        <td>@item.HeartRate</td>
+                        <td>@item.RespiratoryRate</td>
+                        <td>@item.OxygenSaturation</td>
+                        <td>@item.RecordedByName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Vitals Chart</h4>
+        <canvas id="vitalsChart"></canvas>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/chartjs/Chart.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById('vitalsChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.Select(v => v.RecordedAt.ToString("g")).Reverse())),
+                    datasets: [
+                        {
+                            label: 'Temperature (°C)',
+                            data: @Html.Raw(Json.Serialize(Model.Select(v => v.TemperatureC).Reverse())),
+                            borderColor: 'red',
+                            fill: false
+                        },
+                        {
+                            label: 'Heart Rate',
+                            data: @Html.Raw(Json.Serialize(Model.Select(v => v.HeartRate).Reverse())),
+                            borderColor: 'blue',
+                            fill: false
+                        },
+                        {
+                            label: 'Oxygen Saturation (%)',
+                            data: @Html.Raw(Json.Serialize(Model.Select(v => v.OxygenSaturation).Reverse())),
+                            borderColor: 'green',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Date & Time'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

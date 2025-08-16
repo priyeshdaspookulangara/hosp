@@ -1,0 +1,60 @@
+@model UniCareERP.Application.DTOs.Vitals.VitalDto
+
+@{
+    ViewData["Title"] = "Record Vitals";
+}
+
+<h1>Record Vitals</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PatientId" />
+
+            <div class="form-group">
+                <label asp-for="TemperatureC" class="control-label">Temperature (°C)</label>
+                <input asp-for="TemperatureC" class="form-control" />
+                <span asp-validation-for="TemperatureC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BloodPressureSystolic" class="control-label">Blood Pressure (Systolic)</label>
+                <input asp-for="BloodPressureSystolic" class="form-control" />
+                <span asp-validation-for="BloodPressureSystolic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BloodPressureDiastolic" class="control-label">Blood Pressure (Diastolic)</label>
+                <input asp-for="BloodPressureDiastolic" class="form-control" />
+                <span asp-validation-for="BloodPressureDiastolic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HeartRate" class="control-label">Heart Rate</label>
+                <input asp-for="HeartRate" class="form-control" />
+                <span asp-validation-for="HeartRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RespiratoryRate" class="control-label">Respiratory Rate</label>
+                <input asp-for="RespiratoryRate" class="form-control" />
+                <span asp-validation-for="RespiratoryRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OxygenSaturation" class="control-label">Oxygen Saturation (%)</label>
+                <input asp-for="OxygenSaturation" class="form-control" />
+                <span asp-validation-for="OxygenSaturation" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-patientId="@Model.PatientId">Back to Vitals</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -22,6 +22,8 @@ namespace UniCareERP.Application.Tests.Services
         private Mock<ILogger<PatientService>> _mockLogger;
         private PatientService _patientService;
 
+        private List<Patient> _seedPatients;
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -29,16 +31,10 @@ namespace UniCareERP.Application.Tests.Services
             _mockDbSet = new Mock<DbSet<Patient>>();
             _mockLogger = new Mock<ILogger<PatientService>>();
 
-            // Setup DbSet properties and methods
-            var patients = new List<Patient>().AsQueryable();
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(patients.Provider);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(patients.Expression);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(patients.ElementType);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(patients.GetEnumerator());
+            _seedPatients = new List<Patient>();
 
-            _mockDbSet.Setup(d => d.Add(It.IsAny<Patient>())).Callback<Patient>((s) => patients.ToList().Add(s)); // Simulate Add
-            _mockDbSet.Setup(d => d.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) => patients.FirstOrDefault(p => p.Id == (Guid)ids[0]));
-
+            // Setup DbSets
+            SetupMockDbSet(_mockDbSet, _seedPatients);
 
             _mockContext.Setup(c => c.Patients).Returns(_mockDbSet.Object);
             _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()))
@@ -47,34 +43,32 @@ namespace UniCareERP.Application.Tests.Services
             _patientService = new PatientService(_mockContext.Object, _mockLogger.Object);
         }
 
-        private List<Patient> GetSeedPatients()
+        // Generic DbSet Mock Setup
+        private void SetupMockDbSet<TEntity>(Mock<DbSet<TEntity>> mockDbSet, List<TEntity> sourceList) where TEntity : class
         {
-            return new List<Patient>
-            {
-                new Patient { Id = Guid.NewGuid(), FirstName = "John", LastName = "Doe", PatientCode = "P00001", DateOfBirth = new DateTime(1980,1,1), Gender="Male" },
-                new Patient { Id = Guid.NewGuid(), FirstName = "Jane", LastName = "Smith", PatientCode = "P00002", DateOfBirth = new DateTime(1990,5,5), Gender="Female" }
-            };
-        }
+            var queryableList = sourceList.AsQueryable();
+            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<TEntity>(queryableList.Provider));
+            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(queryableList.Expression);
+            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
+            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => queryableList.GetEnumerator());
 
-        private void SetupMockDbSet(List<Patient> patients)
-        {
-            var queryablePatients = patients.AsQueryable();
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(queryablePatients.Provider);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(queryablePatients.Expression);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(queryablePatients.ElementType);
-            _mockDbSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(() => queryablePatients.GetEnumerator());
-            _mockDbSet.Setup(d => d.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) => queryablePatients.FirstOrDefault(p => p.Id == (Guid)ids[0]));
-            _mockDbSet.Setup(m => m.Add(It.IsAny<Patient>())).Callback<Patient>(s => patients.Add(s));
-            _mockDbSet.Setup(m => m.Remove(It.IsAny<Patient>())).Callback<Patient>(s => patients.Remove(s));
+            mockDbSet.As<IAsyncEnumerable<TEntity>>()
+                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+                .Returns(new TestAsyncEnumerator<TEntity>(queryableList.GetEnumerator()));
+
+            mockDbSet.Setup(d => d.FindAsync(It.IsAny<object[]>()))
+                .ReturnsAsync((object[] ids) => {
+                    if (typeof(TEntity) == typeof(Patient)) return sourceList.FirstOrDefault(e => (e as Patient).Id == (Guid)ids[0]) as TEntity;
+                    return null;
+                });
+            mockDbSet.Setup(d => d.Add(It.IsAny<TEntity>())).Callback<TEntity>(s => sourceList.Add(s));
+            mockDbSet.Setup(d => d.Remove(It.IsAny<TEntity>())).Callback<TEntity>(s => sourceList.Remove(s));
         }
 
 
         [TestMethod]
         public async Task GenerateNextPatientCodeAsync_NoExistingPatients_ReturnsP00001()
         {
-            // Arrange
-            SetupMockDbSet(new List<Patient>()); // No patients
-
             // Act
             var code = await _patientService.GenerateNextPatientCodeAsync();
 
@@ -86,12 +80,8 @@ namespace UniCareERP.Application.Tests.Services
         public async Task GenerateNextPatientCodeAsync_WithExistingPatients_ReturnsCorrectNextCode()
         {
             // Arrange
-             var patients = new List<Patient> { new Patient { PatientCode = "P00001" }, new Patient { PatientCode = "P00002" } };
-            SetupMockDbSet(patients);
-             _mockDbSet.As<IAsyncEnumerable<Patient>>() // For OrderByDescending(...).FirstOrDefaultAsync()
-                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
-                .Returns(new TestAsyncEnumerator<Patient>(patients.OrderByDescending(p=>p.PatientCode).AsQueryable().GetEnumerator()));
-
+            _seedPatients.Add(new Patient { PatientCode = "P00001" });
+            _seedPatients.Add(new Patient { PatientCode = "P00002" });
 
             // Act
             var code = await _patientService.GenerateNextPatientCodeAsync();
@@ -106,8 +96,6 @@ namespace UniCareERP.Application.Tests.Services
         {
             // Arrange
             var createDto = new CreatePatientDto { FirstName = "New", LastName = "Patient", DateOfBirth = new DateTime(2000,1,1), Gender="Male" };
-            SetupMockDbSet(new List<Patient>());
-
 
             // Act
             var resultDto = await _patientService.CreatePatientAsync(createDto);
@@ -125,8 +113,7 @@ namespace UniCareERP.Application.Tests.Services
         {
             // Arrange
             var patientId = Guid.NewGuid();
-            var patients = new List<Patient> { new Patient { Id = patientId, FirstName = "Test", LastName = "User", PatientCode="P00001", DateOfBirth = DateTime.Now, Gender="Test" } };
-            SetupMockDbSet(patients);
+            _seedPatients.Add(new Patient { Id = patientId, FirstName = "Test", LastName = "User", PatientCode="P00001", DateOfBirth = DateTime.Now, Gender="Test" });
 
             // Act
             var resultDto = await _patientService.GetPatientByIdAsync(patientId);
@@ -139,9 +126,6 @@ namespace UniCareERP.Application.Tests.Services
         [TestMethod]
         public async Task GetPatientByIdAsync_PatientDoesNotExist_ReturnsNull()
         {
-            // Arrange
-            SetupMockDbSet(new List<Patient>());
-
             // Act
             var resultDto = await _patientService.GetPatientByIdAsync(Guid.NewGuid());
 
@@ -153,12 +137,8 @@ namespace UniCareERP.Application.Tests.Services
         public async Task GetAllPatientsAsync_ReturnsAllPatientDtos()
         {
             // Arrange
-            var seedPatients = GetSeedPatients();
-            SetupMockDbSet(seedPatients);
-             _mockDbSet.As<IAsyncEnumerable<Patient>>() // For ToListAsync()
-                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
-                .Returns(new TestAsyncEnumerator<Patient>(seedPatients.AsQueryable().GetEnumerator()));
-
+            _seedPatients.Add(new Patient { Id = Guid.NewGuid(), FirstName = "John", LastName = "Doe", PatientCode = "P00001", DateOfBirth = new DateTime(1980,1,1), Gender="Male" });
+            _seedPatients.Add(new Patient { Id = Guid.NewGuid(), FirstName = "Jane", LastName = "Smith", PatientCode = "P00002", DateOfBirth = new DateTime(1990,5,5), Gender="Female" });
 
             // Act
             var results = await _patientService.GetAllPatientsAsync();
@@ -173,8 +153,7 @@ namespace UniCareERP.Application.Tests.Services
         {
             // Arrange
             var patientId = Guid.NewGuid();
-            var patients = new List<Patient> { new Patient { Id = patientId, FirstName = "OldName", LastName="OldLast", PatientCode="P00001", DateOfBirth=DateTime.Now, Gender="Old" } };
-            SetupMockDbSet(patients);
+            _seedPatients.Add(new Patient { Id = patientId, FirstName = "OldName", LastName="OldLast", PatientCode="P00001", DateOfBirth=DateTime.Now, Gender="Old" });
 
             var updateDto = new UpdatePatientDto { Id = patientId, FirstName = "NewName", LastName="NewLast", DateOfBirth = DateTime.Now.AddYears(-20), Gender="New" };
 
@@ -183,7 +162,7 @@ namespace UniCareERP.Application.Tests.Services
 
             // Assert
             Assert.IsTrue(result);
-            var updatedPatient = patients.First(p => p.Id == patientId);
+            var updatedPatient = _seedPatients.First(p => p.Id == patientId);
             Assert.AreEqual("NewName", updatedPatient.FirstName);
             _mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
@@ -192,7 +171,6 @@ namespace UniCareERP.Application.Tests.Services
         public async Task UpdatePatientAsync_PatientDoesNotExist_ReturnsFalse()
         {
             // Arrange
-            SetupMockDbSet(new List<Patient>());
             var updateDto = new UpdatePatientDto { Id = Guid.NewGuid(), FirstName = "Test" };
 
             // Act
@@ -208,8 +186,7 @@ namespace UniCareERP.Application.Tests.Services
         {
             // Arrange
             var patientId = Guid.NewGuid();
-            var patients = new List<Patient> { new Patient { Id = patientId, FirstName = "Test" } };
-            SetupMockDbSet(patients);
+            _seedPatients.Add(new Patient { Id = patientId, FirstName = "Test" });
 
             // Act
             var result = await _patientService.DeletePatientAsync(patientId);
@@ -218,15 +195,12 @@ namespace UniCareERP.Application.Tests.Services
             Assert.IsTrue(result);
             _mockDbSet.Verify(db => db.Remove(It.IsAny<Patient>()), Times.Once());
             _mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
-            Assert.IsFalse(patients.Any(p => p.Id == patientId)); // Check if removed from the list used by mock
+            Assert.IsFalse(_seedPatients.Any(p => p.Id == patientId)); // Check if removed from the list used by mock
         }
 
         [TestMethod]
         public async Task DeletePatientAsync_PatientDoesNotExist_ReturnsFalse()
         {
-            // Arrange
-            SetupMockDbSet(new List<Patient>());
-
             // Act
             var result = await _patientService.DeletePatientAsync(Guid.NewGuid());
 

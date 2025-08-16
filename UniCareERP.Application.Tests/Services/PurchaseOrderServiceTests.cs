@@ -45,10 +45,6 @@ namespace UniCareERP.Application.Tests.Services
             SetupMockDbSet(_mockPoDbSet, _seedPOs);
             _mockContext.Setup(c => c.PurchaseOrders).Returns(_mockPoDbSet.Object);
 
-            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
-            _mockContext.Setup(c => c.Database.BeginTransactionAsync(It.IsAny<CancellationToken>()))
-                        .ReturnsAsync(mockTransaction.Object);
-
             _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
             _poService = new PurchaseOrderService(_mockContext.Object, _mockInventoryService.Object, _mockLogger.Object);

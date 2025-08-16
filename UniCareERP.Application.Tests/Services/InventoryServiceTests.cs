@@ -45,10 +45,6 @@ namespace UniCareERP.Application.Tests.Services
             _mockContext.Setup(c => c.InventoryItems).Returns(_mockItemDbSet.Object);
             _mockContext.Setup(c => c.StockTransactions).Returns(_mockTransactionDbSet.Object);
 
-            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
-            _mockContext.Setup(c => c.Database.BeginTransactionAsync(It.IsAny<CancellationToken>()))
-                        .ReturnsAsync(mockTransaction.Object);
-
             _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
             _inventoryService = new InventoryService(_mockContext.Object, _mockLogger.Object);

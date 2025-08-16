@@ -57,10 +57,6 @@ namespace UniCareERP.Application.Tests.Services
                         .Returns((object[] ids) => _seedItems.FirstOrDefault(i => i.Id == (Guid)ids[0]));
 
 
-            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
-            _mockContext.Setup(c => c.Database.BeginTransactionAsync(It.IsAny<CancellationToken>()))
-                        .ReturnsAsync(mockTransaction.Object);
-
             _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
             _saleService = new SaleService(_mockContext.Object, _mockInventoryService.Object, _mockInvoiceService.Object, _mockLogger.Object);

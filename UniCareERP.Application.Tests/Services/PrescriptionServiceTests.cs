@@ -12,6 +12,7 @@ using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Enums;
 using UniCareERP.Infrastructure.Data;
+using UniCareERP.Application.Tests.Helpers;
 
 namespace UniCareERP.Application.Tests.Services
 {
@@ -58,10 +59,20 @@ namespace UniCareERP.Application.Tests.Services
         private void SetupMockDbSet<TEntity>(Mock<DbSet<TEntity>> mockDbSet, List<TEntity> sourceList) where TEntity : class
         {
             var queryableList = sourceList.AsQueryable();
-            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(queryableList.Provider);
+            mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<TEntity>(queryableList.Provider));
             mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(queryableList.Expression);
             mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
             mockDbSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => queryableList.GetEnumerator());
+
+            mockDbSet.As<IAsyncEnumerable<TEntity>>()
+                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+                .Returns(new TestAsyncEnumerator<TEntity>(queryableList.GetEnumerator()));
+
+            mockDbSet.Setup(d => d.FindAsync(It.IsAny<object[]>()))
+                .ReturnsAsync((object[] ids) => {
+                    if (typeof(TEntity) == typeof(Prescription)) return sourceList.FirstOrDefault(e => (e as Prescription).Id == (Guid)ids[0]) as TEntity;
+                    return null;
+                });
             mockDbSet.Setup(d => d.Add(It.IsAny<TEntity>())).Callback<TEntity>(s => sourceList.Add(s));
         }
 

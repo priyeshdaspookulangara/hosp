@@ -10,6 +10,7 @@ using UniCareERP.Domain.Entities.Procedures;
 using UniCareERP.Domain.Entities.Lab;
 using UniCareERP.Domain.Entities.Inpatient;
 using UniCareERP.Domain.Entities.OperationTheatre;
+using UniCareERP.Domain.Entities.Vitals;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -65,6 +66,9 @@ namespace UniCareERP.Infrastructure.Data
         public virtual DbSet<Surgery> Surgeries { get; set; } = null!;
         public virtual DbSet<SurgeryChecklist> SurgeryChecklists { get; set; } = null!;
 
+        // Vitals Management
+        public virtual DbSet<Vital> Vitals { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -101,6 +105,10 @@ namespace UniCareERP.Infrastructure.Data
             builder.Entity<SalaryStructure>().Property(p => p.ProvidentFund).HasPrecision(18, 2);
             builder.Entity<InventoryItem>().Property(p => p.CostPrice).HasPrecision(18, 2);
             builder.Entity<InventoryItem>().Property(p => p.UnitPrice).HasPrecision(18, 2);
+
+            builder.Entity<Vital>()
+                .Property(v => v.Temperature)
+                .HasPrecision(5, 2);
 
             builder.Entity<ProcedureCharge>(b =>
             {
