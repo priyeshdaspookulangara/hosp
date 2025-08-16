@@ -1,0 +1,56 @@
+@model IEnumerable<UniCareERP.Application.DTOs.Permissions.PermissionDto>
+
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<h1>Permissions for Role: @ViewBag.RoleId</h1>
+
+<form asp-action="Update" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" name="RoleId" value="@ViewBag.RoleId" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Read</th>
+                <th>Create</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var permission in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" name="Permissions.Index" value="@permission.Module" />
+                        <input type="hidden" name="Permissions[@permission.Module].Module" value="@permission.Module" />
+                        @permission.Module
+                    </td>
+                    <td>
+                        <input type="checkbox" name="Permissions[@permission.Module].CanRead" value="true" checked="@permission.CanRead" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="Permissions[@permission.Module].CanCreate" value="true" checked="@permission.CanCreate" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="Permissions[@permission.Module].CanUpdate" value="true" checked="@permission.CanUpdate" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="Permissions[@permission.Module].CanDelete" value="true" checked="@permission.CanDelete" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

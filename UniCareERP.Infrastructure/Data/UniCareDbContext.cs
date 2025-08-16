@@ -57,6 +57,7 @@ namespace UniCareERP.Infrastructure.Data
         // Laboratory Management
         public virtual DbSet<LabTest> LabTests { get; set; } = null!;
         public virtual DbSet<LabOrder> LabOrders { get; set; } = null!;
+        public virtual DbSet<Permission> Permissions { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
