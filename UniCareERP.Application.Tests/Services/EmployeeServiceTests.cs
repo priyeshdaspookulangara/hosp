@@ -14,6 +14,7 @@ using UniCareERP.Domain.Entities.HR;
 using UniCareERP.Infrastructure.Data;
 using Microsoft.Extensions.Options;
 using UniCareERP.Application.Tests.Helpers;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace UniCareERP.Application.Tests.Services
 {
@@ -32,16 +33,16 @@ namespace UniCareERP.Application.Tests.Services
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
             _context = new UniCareDbContext(options);
-            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
-            var mockDatabase = new Mock<DatabaseFacade>(_context);
-            mockDatabase.Setup(d => d.BeginTransactionAsync(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(mockTransaction.Object);
-
-            var mockContext = new Mock<UniCareDbContext>(options);
-            mockContext.Setup(c => c.Database).Returns(mockDatabase.Object);
 
             _mockUserManager = MockHelpers.GetMockUserManager();
             _mockLogger = new Mock<ILogger<EmployeeService>>();
+
+            var mockTransaction = new Mock<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction>();
+            var mockContext = new Mock<UniCareDbContext>(options);
+            var mockDatabase = new Mock<DatabaseFacade>(mockContext.Object);
+            mockDatabase.Setup(d => d.BeginTransactionAsync(It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(mockTransaction.Object);
+            mockContext.Setup(c => c.Database).Returns(mockDatabase.Object);
 
             _employeeService = new EmployeeService(mockContext.Object, _mockUserManager.Object, _mockLogger.Object);
         }
@@ -77,6 +78,7 @@ namespace UniCareERP.Application.Tests.Services
             _mockUserManager.Verify(um => um.CreateAsync(It.IsAny<ApplicationUser>(), createDto.Password), Times.Once);
             _mockUserManager.Verify(um => um.AddToRolesAsync(It.IsAny<ApplicationUser>(), createDto.Roles), Times.Once);
             Assert.AreEqual(1, _context.Employees.Count());
+            Assert.AreEqual(1, _context.Users.Count());
         }
 
         [TestMethod]
@@ -131,7 +133,7 @@ namespace UniCareERP.Application.Tests.Services
 
             // Assert
             Assert.IsTrue(result);
-            var deactivatedEmployee = await _context.Employees.FindAsync(employeeId);
+            var deactivatedEmployee = await _context.Employees.Include(e => e.ApplicationUser).FirstOrDefaultAsync(e => e.Id == employeeId);
             Assert.IsFalse(deactivatedEmployee.IsActive);
             Assert.IsFalse(deactivatedEmployee.ApplicationUser.IsActive);
         }
