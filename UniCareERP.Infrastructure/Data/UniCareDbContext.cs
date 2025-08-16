@@ -8,6 +8,7 @@ using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Procedures;
 using UniCareERP.Domain.Entities.Lab;
+using UniCareERP.Domain.Entities.Inpatient;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -20,6 +21,7 @@ namespace UniCareERP.Infrastructure.Data
 
         // Patient & Clinical Management
         public virtual DbSet<Patient> Patients { get; set; } = null!;
+        public virtual DbSet<Inpatient> Inpatients { get; set; } = null!;
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
         public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
         public virtual DbSet<PrescriptionItem> PrescriptionItems { get; set; } = null!;
