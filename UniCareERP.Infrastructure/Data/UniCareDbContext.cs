@@ -8,6 +8,7 @@ using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Procedures;
 using UniCareERP.Domain.Entities.Lab;
+using UniCareERP.Domain.Entities.Radiology;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -17,6 +18,12 @@ namespace UniCareERP.Infrastructure.Data
             : base(options)
         {
         }
+
+        // Radiology Management
+        public virtual DbSet<RadiologyOrder> RadiologyOrders { get; set; } = null!;
+        public virtual DbSet<RadiologyTest> RadiologyTests { get; set; } = null!;
+        public virtual DbSet<RadiologyImage> RadiologyImages { get; set; } = null!;
+        public virtual DbSet<RadiologyReport> RadiologyReports { get; set; } = null!;
 
         // Patient & Clinical Management
         public virtual DbSet<Patient> Patients { get; set; } = null!;
