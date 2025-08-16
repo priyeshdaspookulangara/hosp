@@ -56,6 +56,17 @@
                                     </a>
                                 </li>
                                 <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" data-toggle="collapse" href="#ot_menu">
+                                        <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-procedures"></i><span class="sidebar-menu-text">Operation Theatre</span><span class="ml-auto sidebar-menu-toggle-icon"></span>
+                                    </a>
+                                    <ul class="sidebar-submenu collapse" id="ot_menu">
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="OperationTheatres" asp-action="Index"><span class="sidebar-menu-text">Theatres</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="OperationTheatres" asp-action="SurgicalProcedures"><span class="sidebar-menu-text">Procedures</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="OperationTheatres" asp-action="SurgicalTeams"><span class="sidebar-menu-text">Teams</span></a></li>
+                                        <li class="sidebar-menu-item"><a class="sidebar-menu-button" asp-controller="OTSchedule" asp-action="Index"><span class="sidebar-menu-text">Schedule</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" asp-controller="Appointments" asp-action="Index">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left fas fa-calendar-check"></i><span class="sidebar-menu-text">Appointments</span>
                                     </a>

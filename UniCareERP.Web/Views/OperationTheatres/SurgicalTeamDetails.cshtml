@@ -1,0 +1,31 @@
+@model UniCareERP.Application.DTOs.OperationTheatre.SurgicalTeamDto
+
+@{
+    ViewData["Title"] = "Surgical Team Details";
+}
+
+<h1>Surgical Team Details</h1>
+
+<div>
+    <h4>SurgicalTeam</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    <h5>Members</h5>
+    <ul>
+        @foreach (var member in Model.Members)
+        {
+            <li>@member.UserName</li>
+        }
+    </ul>
+</div>
+<div>
+    <a asp-action="EditSurgicalTeam" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="SurgicalTeams">Back to List</a>
+</div>
