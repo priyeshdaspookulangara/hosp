@@ -1,0 +1,35 @@
+@model IEnumerable<UniCareERP.Application.DTOs.OperationTheatre.SurgicalTeamDto>
+
+@{
+    ViewData["Title"] = "Surgical Teams";
+}
+
+<h1>Surgical Teams</h1>
+
+<p>
+    <a asp-action="CreateSurgicalTeam">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="EditSurgicalTeam" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="SurgicalTeamDetails" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="DeleteSurgicalTeam" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

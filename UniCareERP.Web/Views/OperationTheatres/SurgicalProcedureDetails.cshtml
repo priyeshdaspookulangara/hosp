@@ -1,0 +1,42 @@
+@model UniCareERP.Application.DTOs.OperationTheatre.SurgicalProcedureDto
+
+@{
+    ViewData["Title"] = "Surgical Procedure Details";
+}
+
+<h1>Surgical Procedure Details</h1>
+
+<div>
+    <h4>SurgicalProcedure</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RequiredEquipment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RequiredEquipment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DurationMinutes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DurationMinutes)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="EditSurgicalProcedure" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="SurgicalProcedures">Back to List</a>
+</div>
