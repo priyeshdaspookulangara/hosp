@@ -8,6 +8,7 @@ using UniCareERP.Domain.Entities.Inventory;
 using UniCareERP.Domain.Entities.Patients;
 using UniCareERP.Domain.Entities.Procedures;
 using UniCareERP.Domain.Entities.Lab;
+using UniCareERP.Domain.Entities.Emergency;
 
 namespace UniCareERP.Infrastructure.Data
 {
@@ -17,6 +18,9 @@ namespace UniCareERP.Infrastructure.Data
             : base(options)
         {
         }
+
+        // Emergency Management
+        public virtual DbSet<EmergencyCase> EmergencyCases { get; set; } = null!;
 
         // Patient & Clinical Management
         public virtual DbSet<Patient> Patients { get; set; } = null!;
